@@ -5,7 +5,7 @@ This is an implementation of object streaming, the way it should be:
 - Subclass of the native Promise (*dependable*)
 - Seamless integration with itself, regular promises, and the Node.js ecosystem
 
-An object stream is the plural form of a promise, and therefore its API should be familiar and composable with regular promises.
+An object stream is the plural form of a promise, **and therefore its API should be familiar and composable with regular promises**.
 
 ## Installation
 
