@@ -1,8 +1,14 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-There are many opinionated (or broken) object streaming solutions in Node.js. At their core, object streams are simply the plural form of Promises (while iterables are the plural form of synchronous values). This library aims to honor that notion.
+### The problem
 
-`HonestStreams` are used to aggregate values (or promises of values) concurrently. Unlike many styles of streams, `HonestStream` does not maintain the same sequence of items as they were supplied. It will output items as soon as they are resolved (see [Ordered Streams](#ordered-streams) to accomplish the alternative).
+There are many opinionated (or broken) object streaming solutions in Node.js. They have unique APIs, they often require subclassing and other boilerplate to accomplish simple tasks, and their composability often falls apart in the event of errors.
+
+### The solution
+
+The plural form of a regular value is an iterable. The plural form of a promise is, at its core, an object stream. This library aims to honor that notion.
+
+`HonestStreams` are used to aggregate promises (or regular values) concurrently. Unlike many styles of streams, `HonestStream` does not maintain the same sequence of items as they were supplied. It will output items as soon as they are resolved (see [Ordered Streams](#ordered-streams) to accomplish the alternative).
 
 `HonestStreams` inherit from `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been passed on.
 
