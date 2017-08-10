@@ -1,24 +1,19 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-### The problem
+This is an object stream implementation that achieves the following design goals:
+- Fast performance
+- Very low memory overhead
+- A subclass of the native Promise (dependability)
+- Has a powerful set of utilities, without bloat
+- Has seamless composability with itself, regular promises, and the Node.js ecosystem
 
-There are many opinionated (or broken) object streaming solutions in Node.js. They have unique APIs, they often require subclassing and other boilerplate to accomplish simple tasks, and their composability often falls apart in the event of errors.
+## Motivation
 
-### The solution
+There are many opinionated (or broken) object streaming solutions in Node.js. They often have non-standard APIs, they usually require subclassing or other boilerplate to accomplish simple tasks, they don't handle errors consistently or reliably, and their composability with the rest of the Node.js ecosystem is often weak and limited.
+
+#### The solution: back to the basics
 
 The plural form of a regular value is an iterable. The plural form of a promise is, at its core, an object stream. This library aims to honor that notion.
-
-`HonestStreams` are used to aggregate promises (or regular values) concurrently. Unlike many styles of streams, `HonestStream` does not maintain the same sequence of items as they were supplied. It will output items as soon as they are resolved (see [Ordered Streams](#ordered-streams) to accomplish the alternative).
-
-`HonestStreams` inherit from `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been passed on.
-
-## Installation
-
-```bash
-npm install --save honest-stream
-```
-
-## Usage
 
 ```js
 const Stream = require('honest-stream');
@@ -35,6 +30,16 @@ stream
   .forEach(logMessages)
   .observe(processMessages)
   .then(() => console.log('connection ended!'));
+```
+
+`HonestStreams` are used to aggregate promises (or regular values) concurrently. Unlike many styles of streams, an `HonestStream` does not preserve sequence/order, allowing for maximum concurrency by default. In other words, it will output items as soon as they are resolved. However, `HonestStreams` give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
+
+`HonestStreams` inherit from `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been passed on.
+
+## Installation
+
+```bash
+npm install --save honest-stream
 ```
 
 # API
