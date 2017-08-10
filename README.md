@@ -1,6 +1,6 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-This is an object stream implementation that achieves the following design goals:
+This is an implementation of object streaming that achieves the following design goals:
 - Fast performance and low overhead
 - A subclass of the native Promise (dependability)
 - Has a powerful set of utilities, without bloat
