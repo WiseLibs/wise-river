@@ -2,9 +2,23 @@
 const Promise = require('honest-promise');
 const HonestStream = require('./lib/honest-stream');
 
-Promise.prototype.stream = function stream() {
-	return this.then(HonestStream.from);
-};
+const notIterable = x => x == null || typeof x[Symbol.iterator] !== 'function';
+Object.defineProperty(Promise.prototype, 'stream', {
+	writable: true,
+	enumerable: false,
+	configurable: true,
+	value: function stream() {
+		return new HonestStream((resolve, reject, write) => {
+			this.then((iterable) => {
+				if (notIterable(iterable)) return reject(new TypeError('Expected promise to be resolved with an iterable object'));
+				for (const item of iterable) write(item);
+				resolve();
+			}, reject);
+		});
+	}
+});
+
+Promise.Stream = HonestStream;
+HonestStream.Promise = Promise;
 
 module.exports = HonestStream;
-module.exports.Promise = Promise;
