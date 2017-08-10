@@ -2,7 +2,7 @@
 
 This is an implementation of object streaming (observables) which provides:
 - Fast performance and low overhead
-- Subclass of the native Promise (*dependable*)
+- A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, regular promises, and the Node.js ecosystem
 
 An object stream is the plural form of a promise, **and therefore its API should be familiar and composable with regular promises**.
