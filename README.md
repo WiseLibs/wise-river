@@ -4,7 +4,7 @@ This is an implementation of object streaming (observables) that provides:
 - Fast performance and low overhead
 - Simple and absolute concurrency control
 - A subclass of the native Promise (*dependability*)
-- Seamless integration with itself, regular promises, and the Node.js ecosystem (*see below*)
+- Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
 An observable is the plural form of a promise, **and therefore its API should be familiar and composable with regular promises**.
 
