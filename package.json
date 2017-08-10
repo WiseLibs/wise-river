@@ -1,7 +1,7 @@
 {
   "name": "honest-stream",
   "version": "0.1.0",
-  "description": "Promise-based object streaming the way it should be",
+  "description": "Object streaming the way it should be",
   "main": "index.js",
   "scripts": {
     "test": "$(npm bin)/mocha --bail --timeout 1000 --slow 99999"

@@ -1,6 +1,6 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-This is an implementation of object streaming, the way it should be:
+This is an implementation of object streaming.
 - Fast performance and low overhead
 - Subclass of the native Promise (*dependable*)
 - Seamless integration with itself, regular promises, and the Node.js ecosystem
