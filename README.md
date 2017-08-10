@@ -18,14 +18,14 @@ npm install --save honest-stream
 ```js
 const Stream = require('honest-stream');
 
-const stream = new Stream(function (resolve, reject, write) {
+const messages = new Stream(function (resolve, reject, write) {
   const socket = connectToServer();
   socket.on('data', write);
   socket.on('end', resolve);
   socket.on('error', reject);
 });
 
-stream
+messages
   .map(parseMessages)
   .forEach(logMessages)
   .observe(processMessages)
