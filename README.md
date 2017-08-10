@@ -35,8 +35,8 @@ messages
 
 ## Why this implementation?
 
-There are many opinionated (or broken) object streaming solutions in Node.js:
-- They often have non-standard APIs
+There are many opinionated (often anti-patterned) object streaming solutions in Node.js. Even native streams exhibit many of these problems:
+- They often have complicated, cumbersome APIs
 - They usually require subclassing or other boilerplate to accomplish simple tasks
 - They don't handle errors consistently or reliably
 - Their composability with the rest of the Node.js ecosystem is often weak and limited
