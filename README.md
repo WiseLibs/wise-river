@@ -2,7 +2,7 @@
 
 This is an implementation of object streaming that achieves the following design goals:
 - Fast performance and low overhead
-- A subclass of the native Promise (dependability)
+- A subclass of the native Promise (dependable)
 - Has a powerful set of utilities, without bloat
 - Has seamless composability with itself, regular promises, and the Node.js ecosystem
 
