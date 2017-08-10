@@ -1,18 +1,19 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-This is an implementation of object streaming that achieves the following design goals:
+This is an implementation of object streaming, the way it should be:
 - Fast performance and low overhead
-- A subclass of the native Promise (dependable)
-- Has a powerful set of utilities, without bloat
-- Has seamless composability with itself, regular promises, and the Node.js ecosystem
+- A subclass of the native Promise (*dependable*)
+- Seamlessly integrates with itself, regular promises, and the Node.js ecosystem
 
-## Motivation
+> An object stream is the plural form of a promise, and therefore its API should be familiar and composable with regular promises.
 
-There are many opinionated (or broken) object streaming solutions in Node.js. They often have non-standard APIs, they usually require subclassing or other boilerplate to accomplish simple tasks, they don't handle errors consistently or reliably, and their composability with the rest of the Node.js ecosystem is often weak and limited.
+## Installation
 
-#### The solution: back to the basics
+```bash
+npm install --save honest-stream
+```
 
-The plural form of a regular value is an iterable. The plural form of a promise is, at its core, an object stream. This library aims to honor that notion.
+## Usage
 
 ```js
 const Stream = require('honest-stream');
@@ -31,15 +32,19 @@ stream
   .then(() => console.log('connection ended!'));
 ```
 
-`HonestStreams` are used to aggregate promises (or regular values) concurrently. Unlike many styles of streams, an `HonestStream` does not preserve sequence/order, allowing for maximum concurrency by default. In other words, it will output items as soon as they are resolved. However, `HonestStreams` give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
+## Why this object streaming implementation?
 
-`HonestStreams` inherit from `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been passed on.
+There are many opinionated (or broken) object streaming solutions in Node.js.
+- They often have non-standard APIs
+- They usually require subclassing or other boilerplate to accomplish simple tasks
+- They don't handle errors consistently or reliably
+- Their composability with the rest of the Node.js ecosystem is often weak and limited
 
-## Installation
+Object streams should *feel* like regular promises, but with the ability to easily operate on them a collection (just like arrays of values).
 
-```bash
-npm install --save honest-stream
-```
+`HonestStreams` can easily aggregate promises (or values) concurrently. Unlike many styles of streams, an `HonestStream` does not preserve sequence/order, allowing for maximum concurrency by default. However, `HonestStreams` give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
+
+`HonestStreams` inherit from `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been been consumed.
 
 # API
 
