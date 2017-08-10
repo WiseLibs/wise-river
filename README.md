@@ -19,7 +19,7 @@ npm install --save honest-stream
 const Stream = require('honest-stream');
 
 const stream = new Stream(function (resolve, reject, write) {
-  const socket = connect();
+  const socket = connectToServer();
   socket.on('data', write);
   socket.on('end', resolve);
   socket.on('error', reject);
