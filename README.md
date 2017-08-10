@@ -32,7 +32,7 @@ messages
   .then(() => console.log('connection ended!'));
 ```
 
-## Why this object streaming implementation?
+## Why this implementation?
 
 There are many opinionated (or broken) object streaming solutions in Node.js.
 - They often have non-standard APIs
