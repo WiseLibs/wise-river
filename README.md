@@ -1,6 +1,6 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
-This is an implementation of object streaming (observables), that will hopefully make you want to use object streaming for everything.
+This is an implementation of object streaming (observables) which provides:
 - Fast performance and low overhead
 - Subclass of the native Promise (*dependable*)
 - Seamless integration with itself, regular promises, and the Node.js ecosystem
