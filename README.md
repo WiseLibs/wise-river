@@ -2,7 +2,7 @@
 
 This is an implementation of object streaming (observables) that provides:
 - Fast performance and low overhead
-- Absolute concurrency control
+- Simple and absolute concurrency control
 - A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, regular promises, and the Node.js ecosystem (*see below*)
 
