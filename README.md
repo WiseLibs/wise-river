@@ -118,7 +118,7 @@ Stream.from(['Jonathan', 'Robert', 'Jennifer'])
 
 ### .merge() -> *promise*
 
-Constructs an array containing all data from the stream, and returns a promise for that array. The items in the array will appear in the order that the stream received them.
+Constructs an array containing all the data of the stream, and returns a promise for that array. The items in the array will appear in the order that the stream received them.
 
 ```js
 Stream.from(['a', 'b', 'c'])
