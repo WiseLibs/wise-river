@@ -116,7 +116,7 @@ Stream.from(['Jonathan', 'Robert', 'Jennifer'])
 // => "Jen, John, Rob"
 ```
 
-### .merge() -> *promise*
+### .all() -> *promise*
 
 Constructs an array from each item written to the stream, and returns a promise for that array. The items in the array will appear in the order that the stream received them.
 
@@ -124,14 +124,14 @@ Constructs an array from each item written to the stream, and returns a promise 
 Stream.from(['a', 'b', 'c'])
   .forEach(delayByRandomAmount)
   .map(str => str + str)
-  .merge()
+  .all()
   .log();
 // => ["bb", "cc", "aa"]
 ```
 
 ### .drain() -> *promise*
 
-Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new stream (such as in [`.map()`](#mapconcurrency-callback---stream)), while other times it is consumed by a process for a single value ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise)).
+Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new stream (such as in [`.map()`](#mapconcurrency-callback---stream)), while other times it is consumed by a process for a single value ([`.all()`](#all---promise), [`.reduce()`](#reducecallback-initialvalue---promise)).
 
 `.drain()` is the simplest method of consumption, simply discarding each item in the stream. The returned promise will be fulfilled or rejected as the stream is fulfilled or rejected.
 
@@ -163,7 +163,7 @@ new Stream(source)
   .drain();
 ```
 
-Some methods don't have concurrency control ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise), [`.fork()`](#forkcount--2---array-of-streams)). But don't worry, these methods will maintain order automatically.
+Some methods don't have concurrency control ([`.all()`](#all---promise), [`.reduce()`](#reducecallback-initialvalue---promise), [`.fork()`](#forkcount--2---array-of-streams)). But don't worry, these methods will maintain order automatically.
 
 ## License
 
