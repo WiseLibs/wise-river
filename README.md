@@ -71,7 +71,7 @@ Returns a new stream that contains the combination of all the values of all the 
 
 You can pass an array of streams or pass them as individual arguments (or a mix thereof).
 
-### .fork([*count = 2*]) -> *array of streams*
+### .fork(*count = 2*) -> *array of streams*
 
 Forks a stream into several destination streams, and returns an array of those streams. By default it will fork into two branches, or you can specify exactly how many branches you want.
 
