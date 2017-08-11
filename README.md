@@ -37,9 +37,9 @@ messages
 ## Why this implementation?
 
 Most object streams in Node.js are highly opinionated, and they often don't compose well with promises (the sanctioned asynchronous primitive for JavaScript). Even the streams provided by the standard library exhibit many of these problems:
-- They usually require subclassing or other boilerplate to accomplish simple tasks
-- They don't handle errors consistently or reliably
-- Their composability with the rest of the Node.js ecosystem is often weak and limited
+  1. They usually require subclassing or other boilerplate to accomplish simple tasks
+  2. They don't handle errors consistently or reliably
+  3. Their composability with the rest of the Node.js ecosystem is often weak and limited
 
 Object streams should *feel* like regular promises, but with the ability to easily operate on them a collection (just like arrays of values).
 
