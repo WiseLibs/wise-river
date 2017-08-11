@@ -67,7 +67,7 @@ Forks a stream into several destinations and returns an array of those streams. 
 
 ### .map([*concurrency*], *callback*) -> *stream*
 
-Transforms the stream's data through the provided `callback` function, and passes the resulting data to a new stream returned by this method. If the `callback` returns a promise, its value will be awaited before being passed on to the destination stream.
+Transforms the stream's data through the provided `callback` function, and passes the resulting data to a new stream returned by this method. If the `callback` returns a promise, its value will be awaited before being passed to the destination stream.
 
 If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
@@ -83,7 +83,7 @@ Stream.from(['foo.txt', 'bar.txt'])
 
 ### .forEach([*concurrency*], *callback*) -> *stream*
 
-Similar to [`.map()`](#mapconcurrency-callback---stream), except the stream's data will not be changed. If the callback returns a promise, it will still be awaited, but it will not determine the data that is passed on to the destination stream. This method is primarily used for side effects.
+Similar to [`.map()`](#mapconcurrency-callback---stream), except the stream's data will not be changed. If the callback returns a promise, it will still be awaited, but it will not determine the data that is passed to the destination stream. This method is primarily used for side effects.
 
 ### .filter([*concurrency*], *callback*) -> *stream*
 
