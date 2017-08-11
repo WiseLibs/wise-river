@@ -111,7 +111,7 @@ Constructs an array containing all data from the stream, and returns a promise f
 
 ```js
 Stream.from(['a', 'b', 'c'])
-  .map(delayByRandomAmount)
+  .forEach(delayByRandomAmount)
   .map(str => str + str)
   .merge()
   .log();
