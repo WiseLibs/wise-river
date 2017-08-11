@@ -63,9 +63,7 @@ Creates and returns a new stream. `handler` must be a function with the followin
 
 ### .fork(*count = 2*) -> *array of streams*
 
-Forks a stream into several destinations and returns an array of those streams.
-
-By default it will fork into two branches, but you can specify exactly how many branches you want.
+Forks a stream into several destinations and returns an array of those streams. By default it will fork into two branches, but you can specify exactly how many branches you want.
 
 ### .map([*concurrency*], *callback*) -> *stream*
 
