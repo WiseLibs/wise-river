@@ -37,7 +37,6 @@ messages
 ## Why this implementation?
 
 Most object streams in Node.js are highly opinionated, and they often don't compose well with promises (the sanctioned asynchronous primitive for JavaScript). Even the streams provided by the standard library exhibit many of these problems:
-- They often have complicated, cumbersome APIs
 - They usually require subclassing or other boilerplate to accomplish simple tasks
 - They don't handle errors consistently or reliably
 - Their composability with the rest of the Node.js ecosystem is often weak and limited
