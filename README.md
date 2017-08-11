@@ -41,7 +41,7 @@ Most object streams in Node.js are highly opinionated, and they often don't comp
   2. They don't handle errors consistently or reliably
   3. Their composability with the rest of the Node.js ecosystem is often weak and limited
 
-Object streams should *feel* like regular promises, but provide the ability to easily operate on promises as a collection (just like arrays of values).
+Object streams should *feel* like regular promises, but provide the ability to easily operate on promises as a collection (just like arrays and values).
 
 `HonestStreams` can easily aggregate promises (or values) concurrently. Unlike many styles of streams, an `HonestStream` does not preserve sequence/order, allowing for maximum concurrency by default. However, `HonestStreams` give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
 
