@@ -142,7 +142,7 @@ You can pass an array of streams or pass them as individual arguments (or a mix 
 
 ## Ordered Streams
 
-If you need streams to process their data *in order*, just set the `concurrency` control on each stream to `1`.
+If you need a stream to process its data *in order*, just set its `concurrency` to `1`.
 
 ```js
 new Stream(source)
