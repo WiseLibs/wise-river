@@ -43,9 +43,9 @@ Most object streams in Node.js are highly opinionated, and they often don't comp
 
 Object streams should *feel* like regular promises, but provide the ability to easily operate on promises as a collection (just like arrays and values).
 
-## Details of this implementation
+## Unopinionated by default
 
-Unlike many styles of streams, an HonestStream does not preserve sequence/order, allowing for maximum concurrency by default. However, HonestStreams give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
+Unlike many styles of streams, an HonestStream does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, HonestStreams give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
 
 HonestStreams inherit from the native `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been been consumed.
 
