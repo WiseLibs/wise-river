@@ -67,7 +67,7 @@ Registers the `callback` function to be invoked for each item that enters the st
 
 If the `callback` throws an exception or returns a rejected promise, the stream will stop and will be rejected with the same error.
 
-**This is the most primitive method of an HonestStream. All other methods are derived from this one.**
+> This is the most primitive method of an HonestStream. All other methods are derived from this one.
 
 ### .fork(*count = 2*) -> *array of streams*
 
