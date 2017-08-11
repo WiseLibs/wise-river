@@ -120,7 +120,7 @@ Stream.from(['a', 'b', 'c'])
 
 ### .drain() -> *promise*
 
-Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by new streams (such as in [`.map()`](#mapconcurrency-callback---stream)). Other times it is consumed by processes that result in singular values ([`.merge()`](#merge---this), [`.reduce()`](#reducecallback-initialvalue---this)).
+Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by new streams (such as in [`.map()`](#mapconcurrency-callback---stream)). Other times it is consumed by a process that results in single value ([`.merge()`](#merge---this), [`.reduce()`](#reducecallback-initialvalue---this)).
 
 `.drain()` is the simplest method of consumption, simply discarding each item in the stream. The returned promise will be fulfilled or rejected as the stream is fulfilled or rejected.
 
