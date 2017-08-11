@@ -120,7 +120,7 @@ Stream.from(['a', 'b', 'c'])
 
 ### .drain() -> *promise*
 
-Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new stream (such as in [`.map()`](#mapconcurrency-callback---stream)), while other times it is consumed by a process for a single value ([`.merge()`](#merge---this), [`.reduce()`](#reducecallback-initialvalue---this)).
+Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new stream (such as in [`.map()`](#mapconcurrency-callback---stream)), while other times it is consumed by a process for a single value ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise)).
 
 `.drain()` is the simplest method of consumption, simply discarding each item in the stream. The returned promise will be fulfilled or rejected as the stream is fulfilled or rejected.
 
@@ -152,7 +152,7 @@ new Stream(source)
   .drain();
 ```
 
-Some methods don't have concurrency control ([`.merge()`](#merge---this), [`.reduce()`](#reducecallback-initialvalue---this), [`.fork()`](#forkcount-2---array-of-promises)). But don't worry, these methods will maintain order automatically.
+Some methods don't have concurrency control ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise), [`.fork()`](#forkcount-2---array-of-promises)). But don't worry, these methods will maintain order automatically.
 
 ## License
 
