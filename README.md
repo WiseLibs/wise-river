@@ -61,11 +61,11 @@ Creates and returns a new stream. `handler` must be a function with the followin
  2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
  3. `reject(x)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
 
-### *static* &nbsp;Stream.from(*iterable*) -> *stream*
+### *static*&nbsp; Stream.from(*iterable*) -> *stream*
 
 Constructs a new stream from an `iterable` object of promises or values (or a mix thereof). Each item in the `iterable` object is immediately written to the stream in order.
 
-### *static* &nbsp;Stream.combine(*...streams*) -> *stream*
+### *static*&nbsp; Stream.combine(*...streams*) -> *stream*
 
 Returns a new stream that contains the combination of all the values of all the given streams. The returned stream will not be fulfilled until all the given streams have been fulfilled. If any of the given streams are rejected, this stream is rejected too.
 
