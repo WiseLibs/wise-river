@@ -53,7 +53,7 @@ HonestStreams inherit from the native `Promise` ([`HonestPromise`](https://githu
 
 ## new Stream(*handler*)
 
-This creates and returns a new stream. `handler` must be a function with the following signature:
+Creates and returns a new stream. `handler` must be a function with the following signature:
 
 `function handler(resolve, reject, write)`
 
