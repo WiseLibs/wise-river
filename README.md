@@ -57,9 +57,9 @@ Creates and returns a new stream. `handler` must be a function with the followin
 
 `function handler(resolve, reject, write)`
 
- 1. `write(x)` is used to give values (or promises of values) to the stream. The stream will not be fulfilled until all written values have been consumed. After the stream is resolved, this becomes a no-op.
- 2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
- 3. `reject(x)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
+ 1. `write(any)` is used to give values (or promises of values) to the stream. The stream will not be fulfilled until all written values have been consumed. After the stream is resolved, this becomes a no-op.
+ 2. `resolve(any)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
+ 3. `reject(any)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
 
 ### *static* Stream.from(*iterable*) -> *stream*
 
