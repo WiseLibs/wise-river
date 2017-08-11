@@ -7,7 +7,7 @@ This is an implementation of object streaming (observables) that provides:
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
 ##### The Observable Manifesto
-An observable is the plural form of a promise. **Therefore its API should be familiar and composable with promises**.
+An observable is the plural form of a promise. **Therefore, its API should be familiar and composable with promises**.
 
 ## Installation
 
