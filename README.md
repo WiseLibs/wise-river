@@ -152,7 +152,7 @@ new Stream(source)
   .drain();
 ```
 
-Some methods don't have concurrency control ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise), [`.fork()`](#forkcount-2---array-of-promises)). But don't worry, these methods will maintain order automatically.
+Some methods don't have concurrency control ([`.merge()`](#merge---promise), [`.reduce()`](#reducecallback-initialvalue---promise), [`.fork()`](#forkcount--2---array-of-streams)). But don't worry, these methods will maintain order automatically.
 
 ## License
 
