@@ -63,7 +63,7 @@ Creates and returns a new stream. `handler` must be a function with the followin
 
 ### .observe([*concurrency*], *callback*) -> *this*
 
-*This is the most primitive method of an HonestStream. All other methods are derived from this one.*
+This is the most primitive method of an HonestStream. All other methods are derived from this one.
 
 Registers the `callback` function to be invoked for each item that enters the stream. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
