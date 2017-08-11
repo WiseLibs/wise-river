@@ -2,7 +2,7 @@
 # honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
 
 This is an implementation of object streaming (observables) that provides:
-- Fast performance and low cost
+- Fast performance and low overhead
 - Simple and absolute concurrency control
 - A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
