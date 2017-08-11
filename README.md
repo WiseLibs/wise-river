@@ -71,7 +71,7 @@ Transforms the stream's data through the provided `callback` function, and passe
 
 If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
-If `callback` throws an exception or returns a rejected promise, processing will stop and the stream will be rejected with the same error.
+If the `callback` throws an exception or returns a rejected promise, processing will stop and the stream will be rejected with the same error.
 
 ```js
 Stream.from(['foo.txt', 'bar.txt'])
