@@ -61,6 +61,14 @@ Creates and returns a new stream. `handler` must be a function with the followin
  2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
  3. `reject(x)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
 
+### .observe([*concurrency*], *callback*) -> *this*
+
+Registers the `callback` function to be invoked for each item that enters the stream. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
+
+If the `callback` throws an exception or returns a rejected promise, the stream will stop and will be rejected with the same error.
+
+**This is the most primitive method of an HonestStream. All other methods are derived from this one.**
+
 ### .fork(*count = 2*) -> *array of streams*
 
 Forks a stream into several destinations and returns an array of those streams. By default it will fork into two branches, but you can specify exactly how many branches you want.
