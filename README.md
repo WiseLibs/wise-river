@@ -99,7 +99,7 @@ If the `initialValue` is a promise, its value will be awaited before starting th
 
 ```js
 Stream.from(['Jonathan', 'Robert', 'Jennifer'])
-  .map(getNickname)
+  .map(fetchNickname)
   .reduce((a, b) => a + ', ' + b)
   .log();
 // => "Jen, John, Rob"
