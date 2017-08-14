@@ -10,10 +10,10 @@ Object.defineProperty(Promise.prototype, 'stream', {
 	value: function stream() {
 		return new HonestStream((resolve, reject, write) => {
 			this.then((iterable) => {
-				if (notIterable(iterable)) return reject(new TypeError('Expected promise to be resolved with an iterable object'));
+				if (notIterable(iterable)) throw new TypeError('Expected promise to be resolved with an iterable object');
 				for (const item of iterable) write(item);
 				resolve();
-			}, reject);
+			}).catch(reject);
 		});
 	}
 });
