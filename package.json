@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/JoshuaWise/honest-stream#readme",
   "dependencies": {
-    "honest-promise": "^1.0.4"
+    "honest-promise": ">=1.0.3"
   }
 }
