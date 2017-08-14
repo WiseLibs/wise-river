@@ -70,7 +70,7 @@ Registers the `callback` function to be invoked for each item that enters the st
 
 If the `callback` throws an exception or returns a rejected promise, the stream will stop and will be rejected with the same error.
 
-Each stream can only have a single `callback`. If you try to `observe()` the same stream twice, it will be a no-op and a warning will be emitted. In other words, observers beyond the first will always see the stream as an empty stream. This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the stream's content.
+Each stream can only have a single `callback`. If you try to `observe()` the same stream twice, a warning will be emitted and the second `callback` will never receive any data. In other words, to observers beyond the first, the stream will always look like an empty stream. This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the stream's content.
 
 ### .fork(*count = 2*) -> *array of streams*
 
