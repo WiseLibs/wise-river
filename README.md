@@ -104,21 +104,21 @@ Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the items 
 
 ### .distinct([*equalsFunction*]) -> *stream*
 
-Returns a stream with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
+Returns a new stream with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
 
 `equalsFunction` has the signature: `function equals(previousValue, nextValue) -> boolean`
 
 ### .throttle(*milliseconds*) -> *stream*
 
-Returns a stream that will not emit more than one item every specified number of `milliseconds`. If the stream receives data too quickly, some data will be discarded.
+Returns a new stream that will not emit more than one item every specified number of `milliseconds`. If the stream receives data too quickly, some data will be discarded.
 
 ### .debounce(*milliseconds*) -> *stream*
 
-Returns a stream that will defer its latest data event until the specified number of `milliseconds` has passed since receiving data. If the stream receives data too quickly, all data (except the most recent) will be discarded.
+Returns a new stream that will defer its latest data event until the specified number of `milliseconds` has passed since receiving data. If the stream receives data too quickly, all data (except the most recent) will be discarded.
 
 ### .timeoutBetweenEach(*milliseconds*, [*reason*]) -> *stream*
 
-Returns a stream that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without receiving new data. The timer starts immediately when this method is invoked.
+Returns a new stream that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without receiving new data. The timer starts immediately when this method is invoked.
 
 If you specify a string `reason`, the `TimeoutError` will have `reason` as its message. Otherwise, a default message will be used. If `reason` is an `instanceof Error`, it will be used instead of a `TimeoutError`.
 
