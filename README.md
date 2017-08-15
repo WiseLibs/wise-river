@@ -155,7 +155,7 @@ Returns a new stream that is already fulfilled and never emits any data.
 
 ### *static* Stream.one(*value*) -> *stream*
 
-Returns a new stream that will simply emit the given `value` and then become fulfilled. If the `value` is a promise, it will be emitted after it resolves.
+Returns a new stream that will simply emit the given `value` and then become fulfilled. If the given `value` is a promise, it will be awaited before being written to the stream.
 
 ### *static* Stream.from(*iterable*) -> *stream*
 
