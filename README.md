@@ -102,6 +102,12 @@ Similar to [`.map()`](#mapconcurrency-callback---stream), except the stream's da
 
 Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the items will be filtered by the provided callback function (just like [`Array#filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)). Filtering will occur based on the truthiness of the callback's return value. If the callback returns a promise, its value will be awaited before being used in the filtering process.
 
+### .distinct([*equalsFunction*]) -> *stream*
+
+Returns a new stream with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
+
+`equalsFunction` has the signature: `function equals(previousValue, nextValue)` and it should **not** return promises.
+
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 
 Applies the `callback` function against an accumulator and each piece of data in the stream. This method returns a promise for the final result of the reduction. If no `initialValue` is provided and the stream only receives one item, that item will become the fulfillment value without invoking the callback function. If no `initialValue` is provided and the stream receives *no* items, the stream will be fulfilled with `undefined`.
