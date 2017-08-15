@@ -92,6 +92,8 @@ Stream.from(['foo.txt', 'bar.txt'])
 // => "this is foo!"
 ```
 
+The `.map()` method also doubles as a stereotypical `flatMap()`. If the `callback` returns an HonestStream, its values will be forwarded to the stream returned by this method.
+
 ### .forEach([*concurrency*], *callback*) -> *stream*
 
 Similar to [`.map()`](#mapconcurrency-callback---stream), except the stream's data will not be changed. If the callback returns a promise, it will still be awaited, but it will not determine the data that is passed to the destination stream. This method is primarily used for side effects.
