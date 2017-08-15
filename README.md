@@ -108,6 +108,14 @@ Returns a new stream with the same content as the current one, except that it ne
 
 `equalsFunction` has the signature: `function equals(previousValue, nextValue) -> boolean`
 
+### .throttle(*milliseconds*) -> *stream*
+
+Returns a new stream that will not emit more than one item every specified number of `milliseconds`. If the stream receives data too quickly, some data will be discarded.
+
+### .debounce(*milliseconds*) -> *stream*
+
+Returns a new stream that will defer its latest data event until the specified number of `milliseconds` has passed since receiving data. If the stream receives data too quickly, all data (except the most recent) will be discarded.
+
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 
 Applies the `callback` function against an accumulator and each piece of data in the stream. This method returns a promise for the final result of the reduction. If no `initialValue` is provided and the stream only receives one item, that item will become the fulfillment value without invoking the callback function. If no `initialValue` is provided and the stream receives *no* items, the stream will be fulfilled with `undefined`.
