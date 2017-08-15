@@ -106,7 +106,7 @@ Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the items 
 
 Returns a new stream with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
 
-`equalsFunction` has the signature: `function equals(previousValue, nextValue)` (and it should *not* return promises)
+`equalsFunction` has the signature: `function equals(previousValue, nextValue) -> boolean`
 
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 
