@@ -122,7 +122,7 @@ Returns a new stream that will be rejected with a `TimeoutError` if the specifie
 
 If you specify a string `reason`, the `TimeoutError` will have `reason` as its message. Otherwise, a default message will be used. If `reason` is an `instanceof Error`, it will be used instead of a `TimeoutError`.
 
-`TimeoutError` is available at `Stream.Promise.TimeoutError`.
+`TimeoutError` is available at `Stream.TimeoutError`.
 
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 

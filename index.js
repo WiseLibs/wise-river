@@ -19,6 +19,7 @@ Object.defineProperty(Promise.prototype, 'stream', {
 });
 
 Promise.Stream = HonestStream;
+HonestStream.TimeoutError = Promise.TimeoutError;
 HonestStream.Promise = Promise;
 
 module.exports = HonestStream;
