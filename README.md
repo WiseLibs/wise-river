@@ -163,7 +163,7 @@ Returns a new stream containing the contents of the given `iterable` object. Pro
 
 ### *static* Stream.every(*milliseconds*) -> *object*
 
-Constructs a new stream that emits `undefined` every interval of `milliseconds`.
+Constructs a new stream that will emit `undefined` every interval of `milliseconds`.
 
 An object is returned with two keys:
   1. `stream`: the newly constructed stream
