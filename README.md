@@ -141,9 +141,31 @@ new Stream(infiniteSource)
   .drain();
 ```
 
+### *static* Stream.reject(*reason*) -> *stream*
+
+Returns a new stream that is rejected with the given `reason`.
+
+### *static* Stream.never() -> *stream*
+
+Returns a new stream that never emits any data and never resolves.
+
+### *static* Stream.empty() -> *stream*
+
+Returns a new stream that is already fulfilled and never emits any data.
+
+### *static* Stream.one(*value*) -> *stream*
+
+Returns a new stream that will simply emit the given `value` and then become fulfilled. If the `value` is a promise, it will be emitted after it resolves.
+
 ### *static* Stream.from(*iterable*) -> *stream*
 
-Constructs a new stream from an `iterable` object of promises or values (or a mix thereof). Each item in the `iterable` object is immediately written to the stream in order.
+Returns a new stream containing the contents of the given `iterable` object. Promises found in the `iterable` object are awaited before being written to the stream.
+
+### *static* Stream.every(*milliseconds*) -> *object*
+
+Constructs a new stream that emits `undefined` every interval of `milliseconds`. An object is returned with two keys:
+  1. `stream`: the newly created stream
+  2. `stop`: a function that will clear the interval and resolve the stream
 
 ### *static* Stream.combine(*...streams*) -> *stream*
 
