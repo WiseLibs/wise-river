@@ -166,8 +166,8 @@ Returns a new stream containing the contents of the given `iterable` object. Pro
 Constructs a new stream that will emit `undefined` every interval of `milliseconds`.
 
 An object is returned with two keys:
-  1. `stream:` the newly constructed stream
-  2. `stop:` a function that will clear the interval and resolve the stream
+  1. `stream`: the newly constructed stream
+  2. `stop`: a function that will clear the interval and resolve the stream
 
 ### *static* Stream.combine(*...streams*) -> *stream*
 
