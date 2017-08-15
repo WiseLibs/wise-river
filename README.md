@@ -118,7 +118,7 @@ Returns a new stream that will defer its latest data event until the specified n
 
 ### .timeoutBetweenEach(*milliseconds*, [*reason*]) -> *stream*
 
-Returns a new stream that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without receiving any new data. The timer starts immediately when this method is invoked.
+Returns a new stream that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without the stream receiving any new data. The timer starts immediately when this method is invoked.
 
 If you specify a string `reason`, the `TimeoutError` will have `reason` as its message. Otherwise, a default message will be used. If `reason` is an `instanceof Error`, it will be used instead of a `TimeoutError`.
 
