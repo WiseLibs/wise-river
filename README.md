@@ -199,6 +199,12 @@ Returns a new stream that contains the combination of all the values of all the 
 
 You can pass an array of streams or pass them as individual arguments (or a mix thereof).
 
+### Promise#stream() -> *stream*
+
+After loading this package, [`HonestPromise`](https://github.com/JoshuaWise/honest-promise) will be augmented with the `.stream()` method, which returns a new stream containing the eventual contents of the `iterable` object that the promise resolves to.
+
+If the promise is fulfilled with something other than an `iterable` object, the stream will be rejected with a `TypeError`.
+
 ## Ordered Streams
 
 If you need a stream to process its data *in order*, just set its `concurrency` to `1`.
