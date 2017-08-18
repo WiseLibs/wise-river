@@ -20,6 +20,7 @@ Object.defineProperty(Promise.prototype, 'stream', {
 
 Promise.Stream = HonestStream;
 HonestStream.TimeoutError = Promise.TimeoutError;
+HonestStream.Cancellation = require('./lib/cancellation');
 HonestStream.Promise = Promise;
 
 module.exports = HonestStream;

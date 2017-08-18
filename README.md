@@ -21,17 +21,18 @@ npm install --save honest-stream
 ```js
 const Stream = require('honest-stream');
 
-const messages = new Stream((resolve, reject, write) => {
+const messages = new Stream((resolve, reject, write, free) => {
   const socket = connectToServer();
   socket.on('data', write);
   socket.on('end', resolve);
   socket.on('error', reject);
+  free(() => socket.destroy());
 });
 
 messages
   .map(parseMessages)
   .forEach(logMessages)
-  .observe(processMessages)
+  .consume(processMessages)
   .then(() => console.log('connection ended!'));
 ```
 
@@ -56,21 +57,28 @@ HonestStreams inherit from the native `Promise` ([`HonestPromise`](https://githu
 
 Creates and returns a new stream. `handler` must be a function with the following signature:
 
-`function handler(resolve, reject, write)`
+`function handler(resolve, reject, write, free)`
 
  1. `write(x)` is used to give values (or promises of values) to the stream. The stream will not be fulfilled until all written values have been consumed. After the stream is resolved, this becomes a no-op.
  2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
  3. `reject(x)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
+ 4. `free(fn)` is used to specify *destructor functions*, which will be invoked when the stream is closed (regardless of success or failure). This is for freeing the underlying resources that the stream relied on (if any).
 
-### .observe([*concurrency*], *callback*) -> *this*
+### .observe([*concurrency*], *callback*) -> *function*
 
-*This is the most primitive method of an HonestStream. All other methods are derived from this one.*
+*This is the most primitive method of an HonestStream. All high-level methods are derived from this one.*
 
 Registers the `callback` function to be invoked for each item that enters the stream. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
 If the `callback` throws an exception or returns a rejected promise, the stream will stop and will be rejected with the same error.
 
-Streams will buffer their content until `observe()` (or a higher-level method of consumption) is used. Each stream can only have a single `callback`. If you try to `observe()` the same stream twice, a warning will be emitted and the second `callback` will never receive any data. In other words, the stream will look like an empty stream (except to the first observer). This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the stream's content.
+Streams will buffer their content until `observe()` (or a higher-level method of consumption) is used. Each stream can only have a single consumer. If you try to `observe()` the same stream twice, a warning will be emitted and the second observer will never receive any data. In other words, the stream will look like an empty stream (except to the first observer). This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the stream's content.
+
+This method returns a function (`"cleanup"`), which will dispose of the stream's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the stream's content to a *new* stream, you should simply pass `cleanup` to the fourth parameter of the HonestStream constructor (`free()`). If you try to `observe()` the same stream twice, invocations after the first will return a no-op function; only the *first* observer (the consumer) has authority over the stream's resources.
+
+If `cleanup` is called before the stream is resolved, the stream will be rejected with a `Cancellation` error, which is just a subclass of `Error`.
+
+`Cancellations` don't have stack traces. `Cancellation` is available at `Stream.Cancellation`.
 
 ### .fork(*count = 2*) -> *array of streams*
 
@@ -87,7 +95,7 @@ If the `callback` throws an exception or returns a rejected promise, processing 
 ```js
 Stream.from(['foo.txt', 'bar.txt'])
   .map(readFile)
-  .observe(console.log);
+  .consume(console.log);
 // => "this is bar!"
 // => "this is foo!"
 ```
@@ -123,6 +131,15 @@ Returns a new stream that will be rejected with a `TimeoutError` if the specifie
 If you specify a string `reason`, the `TimeoutError` will have `reason` as its message. Otherwise, a default message will be used. If `reason` is an `instanceof Error`, it will be used instead of a `TimeoutError`.
 
 `TimeoutError` is available at `Stream.TimeoutError`.
+
+### .consume([*concurrency*], *callback*) -> *promise*
+
+Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the stream's content is discarded instead of being piped to a new stream. This method returns a promise which will be fulfilled or rejected as the stream is fulfilled or rejected.
+
+```js
+new Stream(infiniteSource)
+  .consume(processData);
+```
 
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 
@@ -185,13 +202,9 @@ Returns a new stream that will simply emit the given `value` and then become ful
 
 Returns a new stream containing the contents of the given `iterable` object. Promises found in the `iterable` object are awaited before being written to the stream.
 
-### *static* Stream.every(*milliseconds*) -> *object*
+### *static* Stream.every(*milliseconds*) -> *stream*
 
-Constructs a new stream that will emit `undefined` every interval of `milliseconds`.
-
-An object is returned with two keys:
-  1. `stream`: the newly constructed stream
-  2. `stop`: a function that will clear the interval and resolve the stream
+Constructs a new stream that will emit `undefined` upon every interval of `milliseconds`.
 
 ### *static* Stream.combine(*...streams*) -> *stream*
 
