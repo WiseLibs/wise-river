@@ -8,7 +8,7 @@ This is an implementation of object streaming (observables) that provides:
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
 #### "The River Manifesto"
-Streams are the plural form of a promise, **therefore, they should share identity and composability with promises**.
+Streams are the plural form of promises, **therefore, they should share identity and composability with promises**.
 
 ## Installation
 
