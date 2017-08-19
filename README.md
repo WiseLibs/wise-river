@@ -1,5 +1,5 @@
 <a href="https://promisesaplus.com/"><img src="https://promisesaplus.com/assets/logo-small.png" align="right" /></a>
-# honest-stream [![Build Status](https://travis-ci.org/JoshuaWise/honest-stream.svg?branch=master)](https://travis-ci.org/JoshuaWise/honest-stream)
+# wise-river [![Build Status](https://travis-ci.org/JoshuaWise/wise-river.svg?branch=master)](https://travis-ci.org/JoshuaWise/wise-river)
 
 This is an implementation of object streaming (observables) that provides:
 - Fast performance and low overhead
@@ -7,21 +7,21 @@ This is an implementation of object streaming (observables) that provides:
 - A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
-##### "The Observable Manifesto"
-An observable is the plural form of a promise, **therefore, its API should be familiar and composable with promises**.
+##### "The River Manifesto"
+An observable is the plural form of a promise, **therefore, it should have identity and composability with promises**.
 
 ## Installation
 
 ```bash
-npm install --save honest-stream
+npm install --save wise-river
 ```
 
 ## Usage
 
 ```js
-const Stream = require('honest-stream');
+const River = require('wise-river');
 
-const messages = new Stream((resolve, reject, write, free) => {
+const messages = new River((resolve, reject, write, free) => {
   const socket = connectToServer();
   socket.on('data', write);
   socket.on('end', resolve);
@@ -47,110 +47,110 @@ Object streams should *feel* like regular promises, but provide the ability to e
 
 ## Unopinionated by default
 
-Unlike many styles of streams, an HonestStream does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, HonestStream gives you total concurrency control, and therefore it can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)).
+Unlike many styles of streams, a River does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, Rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Streams](#ordered-streams)). Because of this, Rivers are strictly more powerful than traditional streams.
 
-HonestStreams inherit from the native `Promise` ([`HonestPromise`](https://github.com/JoshuaWise/honest-promise)). If an error occurs in a stream, the stream will be rejected, along with all streams that originate from it. If no error occurs, the stream will be fulfilled with `undefined` when all of its items have been been consumed.
+Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/JoshuaWise/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been been consumed.
 
 # API
 
-## new Stream(*handler*)
+## new River(*handler*)
 
-Creates and returns a new stream. `handler` must be a function with the following signature:
+Creates and returns a new river. `handler` must be a function with the following signature:
 
 `function handler(resolve, reject, write, free)`
 
- 1. `write(x)` is used to give values (or promises of values) to the stream. The stream will not be fulfilled until all written values have been consumed. After the stream is resolved, this becomes a no-op.
- 2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a Stream is always `undefined`. The stream's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the stream.
- 3. `reject(x)` behaves the same as with regular promises. After a stream is rejected, all processing stops and any values in the stream are discarded.
- 4. `free(fn)` is used to specify *destructor functions*, which will be invoked when the stream is closed (regardless of success or failure). This is for freeing the underlying resources that the stream relied on (if any).
+ 1. `write(x)` is used to give values (or promises of values) to the river. The river will not be fulfilled until all written values have been consumed. After the river is resolved, this becomes a no-op.
+ 2. `resolve(x)` behaves the same as with regular promises, except that the fulfillment value of a River is always `undefined`. The river's fulfillment can still be delayed by passing a promise. After invoking this function you cannot `write` any more values to the river.
+ 3. `reject(x)` behaves the same as with regular promises. After a river is rejected, all processing stops and any values in the river are discarded.
+ 4. `free(fn)` is used to specify *destructor functions*, which will be invoked when the river is closed (regardless of success or failure). This is for freeing the underlying resources that the river relied on (if any).
 
 ### .observe([*concurrency*], *callback*) -> *function*
 
-*This is the most primitive method of an HonestStream. All high-level methods are derived from this one.*
+*This is the most primitive method of a River. All high-level methods are derived from this one.*
 
-Registers the `callback` function to be invoked for each item that enters the stream. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
+Registers the `callback` function to be invoked for each item that enters the river. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
-If the `callback` throws an exception or returns a rejected promise, the stream will stop and will be rejected with the same error.
+If the `callback` throws an exception or returns a rejected promise, the river will stop and will be rejected with the same error.
 
-Streams will buffer their content until `observe()` (or a higher-level method of consumption) is used. Each stream can only have a single consumer. If you try to `observe()` the same stream twice, a warning will be emitted and the second observer will never receive any data. In other words, the stream will look like an empty stream (except to the first observer). This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the stream's content.
+Rivers will buffer their content until `observe()` (or a higher-level method of consumption) is used. Each river can only have a single consumer. If you try to `observe()` the same river twice, a warning will be emitted and the second observer will never receive any data. In other words, the river will look like an empty river (except to the first observer). This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
 
-This method returns a function (`"cleanup"`), which will dispose of the stream's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the stream's content to a *new* stream, you should simply pass `cleanup` to the fourth parameter of the HonestStream constructor (`free()`). If you try to `observe()` the same stream twice, invocations after the first will return a no-op function; only the *first* observer (the consumer) has authority over the stream's resources.
+This method returns a function (`"cleanup"`), which will dispose of the river's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the river's content to a *new* river, you should simply pass `cleanup` to the fourth parameter of the River constructor (`free()`). If you try to `observe()` the same river twice, invocations after the first will return a no-op function; only the *first* observer (the consumer) has authority over the river's resources.
 
-If `cleanup` is called before the stream is resolved, the stream will be rejected with a `Cancellation` error, which is just a subclass of `Error`.
+If `cleanup` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`.
 
-`Cancellations` don't have stack traces. `Cancellation` is available at `Stream.Cancellation`.
+`Cancellations` don't have stack traces. `Cancellation` is available at `River.Cancellation`.
 
-### .fork(*count = 2*) -> *array of streams*
+### .fork(*count = 2*) -> *array of rivers*
 
-Forks a stream into several destinations and returns an array of those streams. By default it will fork into two branches, but you can specify exactly how many branches you want.
+Forks a river into several destinations and returns an array of those rivers. By default it will fork into two branches, but you can specify exactly how many branches you want.
 
-### .map([*concurrency*], *callback*) -> *stream*
+### .map([*concurrency*], *callback*) -> *river*
 
-Transforms the stream's data through the provided `callback` function, and passes the resulting data to a new stream returned by this method. If the `callback` returns a promise, its value will be awaited before being passed to the destination stream.
+Transforms the river's data through the provided `callback` function, and passes the resulting data to a new river returned by this method. If the `callback` returns a promise, its value will be awaited before being passed to the destination river.
 
 If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
-If the `callback` throws an exception or returns a rejected promise, processing will stop and the stream will be rejected with the same error.
+If the `callback` throws an exception or returns a rejected promise, processing will stop and the river will be rejected with the same error.
 
 ```js
-Stream.from(['foo.txt', 'bar.txt'])
+River.from(['foo.txt', 'bar.txt'])
   .map(readFile)
   .consume(console.log);
 // => "this is bar!"
 // => "this is foo!"
 ```
 
-The `.map()` method also doubles as a stereotypical `flatMap()`. If the `callback` returns an HonestStream, its values will be forwarded to the stream returned by this method.
+The `.map()` method also doubles as a stereotypical `flatMap()`. If the `callback` returns a River, its values will be forwarded to the river returned by this method.
 
-### .forEach([*concurrency*], *callback*) -> *stream*
+### .forEach([*concurrency*], *callback*) -> *river*
 
-Similar to [`.map()`](#mapconcurrency-callback---stream), except the stream's data will not be changed. If the callback returns a promise, it will still be awaited, but it will not determine the data that is passed to the destination stream. This method is primarily used for side effects.
+Similar to [`.map()`](#mapconcurrency-callback---river), except the river's data will not be changed. If the callback returns a promise, it will still be awaited, but it will not determine the data that is passed to the destination river. This method is primarily used for side effects.
 
-### .filter([*concurrency*], *callback*) -> *stream*
+### .filter([*concurrency*], *callback*) -> *river*
 
-Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the items will be filtered by the provided callback function (just like [`Array#filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)). Filtering will occur based on the truthiness of the callback's return value. If the callback returns a promise, its value will be awaited before being used in the filtering process.
+Similar to [`.forEach()`](#foreachconcurrency-callback---river), but the items will be filtered by the provided callback function (just like [`Array#filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)). Filtering will occur based on the truthiness of the callback's return value. If the callback returns a promise, its value will be awaited before being used in the filtering process.
 
-### .distinct([*equalsFunction*]) -> *stream*
+### .distinct([*equalsFunction*]) -> *river*
 
-Returns a new stream with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
+Returns a new river with the same content as the current one, except that it never emits two consecutive items of equal value. By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
 
 `equalsFunction` has the signature: `function equals(previousValue, nextValue) -> boolean`
 
-### .throttle(*milliseconds*) -> *stream*
+### .throttle(*milliseconds*) -> *river*
 
-Returns a new stream that will not emit more than one item every specified number of `milliseconds`. If the stream receives data too quickly, some data will be discarded.
+Returns a new river that will not emit more than one item every specified number of `milliseconds`. If the river receives data too quickly, some data will be discarded.
 
-### .debounce(*milliseconds*) -> *stream*
+### .debounce(*milliseconds*) -> *river*
 
-Returns a new stream that will defer its latest data event until the specified number of `milliseconds` has passed since receiving data. If the stream receives data too quickly, all data (except the most recent) will be discarded.
+Returns a new river that will defer its latest data event until the specified number of `milliseconds` has passed since receiving data. If the river receives data too quickly, all data (except the most recent) will be discarded.
 
-### .timeoutBetweenEach(*milliseconds*, [*reason*]) -> *stream*
+### .timeoutBetweenEach(*milliseconds*, [*reason*]) -> *river*
 
-Returns a new stream that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without the stream receiving any new data. The timer starts immediately when this method is invoked.
+Returns a new river that will be rejected with a `TimeoutError` if the specified number of `milliseconds` passes without the river receiving any new data. The timer starts immediately when this method is invoked.
 
 If you specify a string `reason`, the `TimeoutError` will have `reason` as its message. Otherwise, a default message will be used. If `reason` is an `instanceof Error`, it will be used instead of a `TimeoutError`.
 
-`TimeoutError` is available at `Stream.TimeoutError`.
+`TimeoutError` is available at `River.TimeoutError`.
 
 ### .consume([*concurrency*], *callback*) -> *promise*
 
-Similar to [`.forEach()`](#foreachconcurrency-callback---stream), but the stream's content is discarded instead of being piped to a new stream. This method returns a promise which will be fulfilled or rejected as the stream is fulfilled or rejected.
+Similar to [`.forEach()`](#foreachconcurrency-callback---river), but the river's content is discarded instead of being piped to a new river. This method returns a promise which will be fulfilled or rejected as the river is fulfilled or rejected.
 
 ```js
-new Stream(infiniteSource)
+new River(infiniteSource)
   .consume(processData);
 ```
 
 ### .reduce(*callback*, [*initialValue*]) -> *promise*
 
-Applies the `callback` function against an accumulator and each piece of data in the stream. This method returns a promise for the final result of the reduction. If no `initialValue` is provided and the stream only receives one item, that item will become the fulfillment value without invoking the callback function. If no `initialValue` is provided and the stream receives *no* items, the stream will be fulfilled with `undefined`.
+Applies the `callback` function against an accumulator and each piece of data in the river. This method returns a promise for the final result of the reduction. If no `initialValue` is provided and the river only receives one item, that item will become the fulfillment value without invoking the callback function. If no `initialValue` is provided and the river receives *no* items, the promise will be fulfilled with `undefined`.
 
-If the `initialValue` is a promise, its value will be awaited before starting the reduction process. If the `callback` returns a promise, it will be awaited before processing the next piece of data against the accumulator. Keep in mind that the `callback` function will process data in the order that the stream receives it.
+If the `initialValue` is a promise, its value will be awaited before starting the reduction process. If the `callback` returns a promise, it will be awaited before processing the next piece of data against the accumulator. Keep in mind that the `callback` function will process data in the order that the river receives it.
 
 `callback` has the signature: `function callback(accumulator, value)`
 
 ```js
-Stream.from(['Jonathan', 'Robert', 'Jennifer'])
+River.from(['Jonathan', 'Robert', 'Jennifer'])
   .map(fetchNickname)
   .reduce((a, b) => a + ', ' + b)
   .log();
@@ -159,10 +159,10 @@ Stream.from(['Jonathan', 'Robert', 'Jennifer'])
 
 ### .all() -> *promise*
 
-Constructs an array from each item written to the stream, and returns a promise for that array. The items in the array will appear in the order that the stream received them.
+Constructs an array from each item written to the river, and returns a promise for that array. The items in the array will appear in the order that the river received them.
 
 ```js
-Stream.from(['a', 'b', 'c'])
+River.from(['a', 'b', 'c'])
   .forEach(delayByRandomAmount)
   .map(str => str + str)
   .all()
@@ -172,66 +172,66 @@ Stream.from(['a', 'b', 'c'])
 
 ### .drain() -> *promise*
 
-Streams cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new stream (such as in [`.map()`](#mapconcurrency-callback---stream)), while other times it is consumed by a process for a single value ([`.all()`](#all---promise), [`.reduce()`](#reducecallback-initialvalue---promise)).
+Rivers cannot be fulfilled until all of their data has been consumed. Sometimes the data is consumed by a new river (such as in [`.map()`](#mapconcurrency-callback---river)), while other times it is consumed by a process for a single value ([`.all()`](#all---promise), [`.reduce()`](#reducecallback-initialvalue---promise)).
 
-`.drain()` is the simplest method of consumption, simply discarding each item in the stream. The returned promise will be fulfilled or rejected as the stream is fulfilled or rejected.
+`.drain()` is the simplest method of consumption, simply discarding each item in the river. The returned promise will be fulfilled or rejected as the river is fulfilled or rejected.
 
 ```js
-new Stream(infiniteSource)
+new River(infiniteSource)
   .forEach(processData)
   .drain();
 ```
 
-### *static* Stream.reject(*reason*) -> *stream*
+### *static* River.reject(*reason*) -> *river*
 
-Returns a new stream that is rejected with the given `reason`.
+Returns a new river that is rejected with the given `reason`.
 
-### *static* Stream.never() -> *stream*
+### *static* River.never() -> *river*
 
-Returns a new stream that never emits any data and never resolves.
+Returns a new river that never emits any data and never resolves.
 
-### *static* Stream.empty() -> *stream*
+### *static* River.empty() -> *river*
 
-Returns a new stream that is already fulfilled and never emits any data.
+Returns a new river that is already fulfilled and never emits any data.
 
-### *static* Stream.one(*value*) -> *stream*
+### *static* River.one(*value*) -> *river*
 
-Returns a new stream that will simply emit the given `value` and then become fulfilled. If the given `value` is a promise, it will be awaited before being written to the stream.
+Returns a new river that will simply emit the given `value` and then become fulfilled. If the given `value` is a promise, it will be awaited before being written to the river.
 
-### *static* Stream.from(*iterable*) -> *stream*
+### *static* River.from(*iterable*) -> *river*
 
-Returns a new stream containing the contents of the given `iterable` object. Promises found in the `iterable` object are awaited before being written to the stream.
+Returns a new river containing the contents of the given `iterable` object. Promises found in the `iterable` object are awaited before being written to the river.
 
-### *static* Stream.every(*milliseconds*) -> *stream*
+### *static* River.every(*milliseconds*) -> *river*
 
-Constructs a new stream that will emit `undefined` upon every interval of `milliseconds`.
+Constructs a new river that will emit `undefined` upon every interval of `milliseconds`.
 
-### *static* Stream.combine(*...streams*) -> *stream*
+### *static* River.combine(*...rivers*) -> *river*
 
-Returns a new stream that contains the combination of all the values of all the given streams. The returned stream will not be fulfilled until all the given streams have been fulfilled. If any of the given streams are rejected, this stream is rejected too.
+Returns a new river that contains the combination of all the values of all the given rivers. The returned river will not be fulfilled until all the given rivers have been fulfilled. If any of the given rivers are rejected, this river is rejected too.
 
-You can pass an array of streams or pass them as individual arguments (or a mix thereof).
+You can pass an array of rivers or pass them as individual arguments (or a mix thereof).
 
-### Promise#stream() -> *stream*
+### Promise#stream() -> *river*
 
-After loading this package, [`HonestPromise`](https://github.com/JoshuaWise/honest-promise) will be augmented with the `.stream()` method, which returns a new stream containing the eventual contents of the `iterable` object that the promise resolves to.
+After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise resolves to.
 
-If the promise is fulfilled with something other than an `iterable` object, the stream will be rejected with a `TypeError`.
+If the promise is fulfilled with something other than an `iterable` object, the river will be rejected with a `TypeError`.
 
 ## Ordered Streams
 
-If you need a stream to process its data *in order*, just set its `concurrency` to `1`.
+If you need a river to process its data *in order*, just set its `concurrency` to `1`.
 
 ```js
-new Stream(source)
+new River(source)
   .filter(1, sanitizeData)
   .map(1, processData)
   .forEach(1, saveData)
   .drain();
 ```
 
-Some methods don't have concurrency control ([`.reduce()`](#reducecallback-initialvalue---promise), [`.distinct()`](#distinctequalsfunction---stream), [`.fork()`](#forkcount--2---array-of-streams), etc.). But don't worry, these methods will maintain order automatically.
+Some methods don't have concurrency control ([`.reduce()`](#reducecallback-initialvalue---promise), [`.distinct()`](#distinctequalsfunction---river), [`.fork()`](#forkcount--2---array-of-rivers), etc.). But don't worry, these methods will maintain order automatically.
 
 ## License
 
-[MIT](https://github.com/JoshuaWise/honest-stream/blob/master/LICENSE)
+[MIT](https://github.com/JoshuaWise/wise-river/blob/master/LICENSE)

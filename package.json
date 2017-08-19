@@ -1,5 +1,5 @@
 {
-  "name": "honest-stream",
+  "name": "wise-river",
   "version": "0.1.0",
   "description": "Object streaming the way it should be",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoshuaWise/honest-stream.git"
+    "url": "git+https://github.com/JoshuaWise/wise-river.git"
   },
   "keywords": [
     "observables",
@@ -20,10 +20,10 @@
   "author": "Joshua Wise <joshuathomaswise@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoshuaWise/honest-stream/issues"
+    "url": "https://github.com/JoshuaWise/wise-river/issues"
   },
-  "homepage": "https://github.com/JoshuaWise/honest-stream#readme",
+  "homepage": "https://github.com/JoshuaWise/wise-river#readme",
   "dependencies": {
-    "honest-promise": ">=1.0.3"
+    "wise-promise": ">=1.1.0"
   }
 }
