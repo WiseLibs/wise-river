@@ -190,7 +190,7 @@ River.from(['a', 'b', 'c'])
 
 ### .find([*concurrency*], *predicate*) -> *promise*
 
-Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise gets resolved and the river gets cancelled.
+Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise is resolved and the river is cancelled.
 
 The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also returns a promise for `true` or `false`, instead.
 
@@ -200,7 +200,7 @@ If the river resolves but no items matched the `predicate`, the promise will be 
 
 ### .includes(*value*) -> *promise*
 
-Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise gets resolved with `true` and the river gets cancelled. Otherwise, the returned promise is resolved with `false`.
+Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise is resolved with `true` and the river is cancelled. Otherwise, the returned promise is resolved with `false`.
 
 The given `value` can be a promise, in which case its value is awaited before the river is searched.
 
@@ -210,7 +210,7 @@ If used without any arguments, this method returns a promise for the first item 
 
 If a `number` is provided, the returned promise will instead be resolved with an array of the first `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
 
-In either case, when the returned promise gets resolved, the river gets cancelled.
+In either case, the river will be cancelled when the returned promise is resolved.
 
 `NoDataError` is available at `River.NoDataError`.
 
@@ -260,7 +260,7 @@ Constructs a new river that will emit `undefined` upon every interval of `millis
 
 ### *static* River.combine(*...rivers*) -> *river*
 
-Returns a new river that contains the combination of all the values of all the given rivers. The returned river will not be fulfilled until all the given rivers have been fulfilled. If any of the given rivers are rejected, this river gets rejected too.
+Returns a new river that contains the combination of all the values of all the given rivers. The returned river will not be fulfilled until all the given rivers have been fulfilled. If any of the given rivers are rejected, this river is rejected too.
 
 You can pass an array of rivers or pass them as individual arguments (or a mix thereof).
 
