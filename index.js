@@ -1,6 +1,6 @@
 'use strict';
 const Promise = require('wise-promise');
-const WiseRiver = require('./lib/wise-rivers');
+const WiseRiver = require('./lib/wise-river');
 
 const notIterable = x => x == null || typeof x[Symbol.iterator] !== 'function';
 Object.defineProperty(Promise.prototype, 'stream', {
