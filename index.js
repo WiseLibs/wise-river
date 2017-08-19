@@ -20,6 +20,7 @@ Object.defineProperty(Promise.prototype, 'stream', {
 
 Promise.River = WiseRiver;
 WiseRiver.TimeoutError = Promise.TimeoutError;
+WiseRiver.NoDataError = require('./lib/no-data-error');
 WiseRiver.Cancellation = require('./lib/cancellation');
 WiseRiver.Promise = Promise;
 
