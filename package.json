@@ -13,9 +13,9 @@
   "keywords": [
     "observables",
     "async",
-    "object",
     "stream",
-    "promise"
+    "promise",
+    "concurrency"
   ],
   "author": "Joshua Wise <joshuathomaswise@gmail.com>",
   "license": "MIT",
