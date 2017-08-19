@@ -66,7 +66,7 @@ Creates and returns a new river. `handler` must be a function with the following
 
 ### .pump([*concurrency*], *callback*) -> *function*
 
-*This is the most primitive method of a River. All high-level methods are derived from this.*
+*This is the most primitive method of a River. All high-level methods are derived from here.*
 
 Registers the `callback` function to be invoked for each item that enters the river. The callback can return a promise to indicate that it is "processing" the item. If a `concurrency` number is provided, only that many items will be processed at a time. The default is `0` which signifies infinite concurrency.
 
