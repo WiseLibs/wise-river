@@ -47,7 +47,7 @@ Object streams should *feel* like regular promises, but provide the ability to e
 
 ## Unopinionated by default
 
-Unlike many styles of streams, a River does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, Rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Rivers](#ordered-rivers)). Because of this, Rivers are strictly more powerful than traditional streams.
+Unlike many styles of streams, a river does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Rivers](#ordered-rivers)). Because of this, rivers are strictly more powerful than traditional streams.
 
 Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/JoshuaWise/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been been consumed.
 
