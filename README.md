@@ -134,6 +134,20 @@ If you specify a string `reason`, the `TimeoutError` will have `reason` as its m
 
 `TimeoutError` is available at `River.TimeoutError`.
 
+### .while([*concurrency*], *callback*) -> *river*
+
+Forwards the river's content to a new river until the provided `callback` function returns a falsey value (or a promise for a falsey value), at which point the returned river will be fulfilled and the source river will be cancelled.
+
+The `callback` will be invoked once for each item that enters the river.
+
+If the source river is fulfilled or rejected before the `callback` returns a falsey value, the returned river will also be fulfilled or rejected, respectively.
+
+### .until(*promise*) -> *river*
+
+Forwards the river's content to a new river until the given `promise` is fulfilled, at which point the returned river will be fulfilled and the source river will be cancelled.
+
+If the `promise` is rejected before this river resolves, the returned river will be rejected with the same error. If the source river is fulfilled or rejected before the `promise` resolves, the returned river will also be fulfilled or rejected, respectively.
+
 ### .consume([*concurrency*], *callback*) -> *promise*
 
 Similar to [`.forEach()`](#foreachconcurrency-callback---river), but the river's content is discarded instead of being piped to a new river. This method returns a promise which will be fulfilled or rejected as the river is fulfilled or rejected.
