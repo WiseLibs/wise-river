@@ -190,17 +190,17 @@ River.from(['a', 'b', 'c'])
 
 ### .find([*concurrency*], *predicate*) -> *promise*
 
-Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise is resolved and the river is cancelled.
+Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise is fulfilled and the river is cancelled.
 
 The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also returns a promise for `true` or `false`, instead.
 
-If the river resolves but no items matched the `predicate`, the promise will be rejected with a `NoDataError`.
+If the river fulfills but no items matched the `predicate`, the promise will be rejected with a `NoDataError`.
 
 `NoDataError` is available at `River.NoDataError`.
 
 ### .includes(*value*) -> *promise*
 
-Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise is resolved with `true` and the river is cancelled. Otherwise, the returned promise is resolved with `false`.
+Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise will be fulfilled with `true` and the river will be cancelled. Otherwise, the returned promise will be fulfilled with `false`.
 
 The given `value` can be a promise, in which case its value is awaited before the river is searched.
 
@@ -208,7 +208,7 @@ The given `value` can be a promise, in which case its value is awaited before th
 
 If used without any arguments, this method returns a promise for the first item in river. If the river never received any data, the promise will be rejected with a `NoDataError`.
 
-If a `number` is provided, the returned promise will instead be resolved with an array of the first `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
+If a `number` is provided, the returned promise will instead be fulfilled with an array of the first `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
 
 In either case, the river will be cancelled when the returned promise is resolved.
 
@@ -218,7 +218,7 @@ In either case, the river will be cancelled when the returned promise is resolve
 
 If used without any arguments, this method returns a promise for the *last* item in river. If the river never received any data, the promise will be rejected with a `NoDataError`.
 
-If a `number` is provided, the returned promise will instead be resolved with an array of the last `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
+If a `number` is provided, the returned promise will instead be fulfilled with an array of the last `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
 
 `NoDataError` is available at `River.NoDataError`.
 
@@ -266,7 +266,7 @@ You can pass an array of rivers or pass them as individual arguments (or a mix t
 
 ### Promise#stream() -> *river*
 
-After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise resolves to.
+After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise is fulfilled with.
 
 If the promise is fulfilled with something other than an `iterable` object, the river will be rejected with a `TypeError`.
 
