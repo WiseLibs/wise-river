@@ -64,7 +64,7 @@ Creates and returns a new river. `handler` must be a function with the following
  3. `reject(x)` behaves the same as with regular promises. After a river is rejected, all processing stops and any values in the river are discarded.
  4. `free(fn)` is used to specify *destructor functions*, which will be invoked when the river is closed (regardless of success or failure). This is for freeing the underlying resources that the river relied on (if any).
 
-### .observe([*concurrency*], *callback*) -> *function*
+### .pump([*concurrency*], *callback*) -> *function*
 
 *This is the most primitive method of a River. All high-level methods are derived from this one.*
 
@@ -72,9 +72,9 @@ Registers the `callback` function to be invoked for each item that enters the ri
 
 If the `callback` throws an exception or returns a rejected promise, the river will stop and will be rejected with the same error.
 
-Rivers will buffer their content until `observe()` (or a higher-level method of consumption) is used. Each river can only have a single consumer. If you try to `observe()` the same river twice, a warning will be emitted and the second observer will never receive any data. In other words, the river will look like an empty river (except to the first observer). This way, observers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
+Rivers will buffer their content until `pump()` (or a higher-level method of consumption) is used. Each river can only have a single consumer. If you try to `pump()` the same river twice, a warning will be emitted and the second consumer will never receive any data. In other words, the river will look like an empty river (except to the first consumer). This way, consumers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
 
-This method returns a function (`"cleanup"`), which will dispose of the river's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the river's content to a *new* river, you should simply pass `cleanup` to the fourth parameter of the River constructor (`free()`). If you try to `observe()` the same river twice, invocations after the first will return a no-op function; only the *first* observer (the consumer) has authority over the river's resources.
+This method returns a function (`"cleanup"`), which will dispose of the river's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the river's content to a *new* river, you should simply pass `cleanup` to the fourth parameter of the River constructor (`free()`). If you try to `pump()` the same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's resources.
 
 If `cleanup` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`.
 
