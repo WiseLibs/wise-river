@@ -72,7 +72,7 @@ Registers the `callback` function to be invoked for each item that enters the ri
 
 If the `callback` throws an exception or returns a rejected promise, the river will stop and will be rejected with the same error.
 
-Rivers will buffer their content until `pump()` (or a higher-level method of consumption) is used. Each river can only have a single consumer. If you try to `pump()` the same river twice, a warning will be emitted and the second consumer will never receive any data. In other words, the river will look like an empty river (except to the first consumer). This way, consumers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
+Rivers will buffer their content until `pump()` (or a higher-level method of consumption) is used. Also, each river can only have a single consumer. If you try to `pump()` the same river twice, a warning will be emitted and the second consumer will never receive any data. In other words, the river will look like an empty river (except to the first consumer). This way, consumers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
 
 This method returns a function (`"cleanup"`), which will dispose of the river's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the river's content to a *new* river, you should simply pass `cleanup` to the fourth parameter of the River constructor (`free()`). If you try to `pump()` the same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's resources.
 
