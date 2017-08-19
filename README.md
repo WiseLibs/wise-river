@@ -7,7 +7,7 @@ This is an implementation of object streaming (observables) that provides:
 - A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
-##### "The River Manifesto"
+#### "The River Manifesto"
 An observable is the plural form of a promise, **therefore, it should have identity and composability with promises**.
 
 ## Installation
