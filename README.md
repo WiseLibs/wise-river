@@ -76,9 +76,9 @@ Rivers will buffer their content until `pump()` (or a higher-level method of con
 
 Each river can only have a single consumer. If you try to use `pump()` on the same river twice, a warning will be emitted and the second consumer will never receive any data. In other words, the river will look like an empty river (except to the first consumer). This way, consumers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
 
-This method returns a function (`"cleanup"`), which will dispose of the river's underlying resources (if any). If you're using this low-level method, it's your responsibility to ensure that `cleanup` is eventually called, regardless of success or failure. If you're piping the river's content to a *new* river, you should simply pass `cleanup` to the fourth parameter of the River constructor (`free()`). If you try to use `pump()` on same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's resources.
+This method returns a function (`"cancel"`). If `cancel` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`. If you're piping the river's content to a *new* river, you should pass `cancel` to the fourth parameter of the River constructor (`free()`). This allows upstream consumers to cancel the river chain if they are no longer interested in it.
 
-If `cleanup` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`.
+If you try to use `pump()` on same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's cancellation.
 
 `Cancellations` don't have stack traces. `Cancellation` is available at `River.Cancellation`.
 
@@ -185,6 +185,20 @@ River.from(['a', 'b', 'c'])
   .log();
 // => ["bb", "cc", "aa"]
 ```
+
+### .find([*concurrency*], *predicate*) -> *promise*
+
+Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise is resolved and the river is cancelled.
+
+The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also returns a promise for `true` or `false`, instead.
+
+If the river is fulfilled but no items matched the `predicate`, the promise will be resolved with `undefined`.
+
+### .includes(*value*) -> *promise*
+
+Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise is resolved with `true` and the river is cancelled. Otherwise, the returned promise is resolved with `false`.
+
+The given `value` can be a promise, in which case its value is awaited before the river is searched.
 
 ### .drain() -> *promise*
 
