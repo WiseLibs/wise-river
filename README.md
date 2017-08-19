@@ -2,7 +2,7 @@
 # wise-river [![Build Status](https://travis-ci.org/JoshuaWise/wise-river.svg?branch=master)](https://travis-ci.org/JoshuaWise/wise-river)
 
 Rivers are a style of object streaming (observables) that provide:
-- Absolute concurrency control
+- Simple and absolute concurrency control
 - Automatic resource management
 - A subclass of the native Promise (*dependability*)
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
