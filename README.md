@@ -1,7 +1,7 @@
 <a href="https://promisesaplus.com/"><img src="https://promisesaplus.com/assets/logo-small.png" align="right" /></a>
 # wise-river [![Build Status](https://travis-ci.org/JoshuaWise/wise-river.svg?branch=master)](https://travis-ci.org/JoshuaWise/wise-river)
 
-Rivers are an implementation of object streaming (observables) that provides:
+Rivers are a style of object streaming (observables) that provides:
 - Fast performance and low overhead
 - Simple and absolute concurrency control
 - A subclass of the native Promise (*dependability*)
