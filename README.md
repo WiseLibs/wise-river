@@ -190,7 +190,7 @@ River.from(['a', 'b', 'c'])
 
 ### .find([*concurrency*], *predicate*) -> *promise*
 
-Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise is fulfilled with that item and the river is cancelled.
+Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise will be fulfilled with that item and the river is cancelled.
 
 The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also returns a promise for `true` or `false`, instead.
 
