@@ -177,7 +177,7 @@ River.from(['Jonathan', 'Robert', 'Jennifer'])
 
 ### .all() -> *promise*
 
-Constructs an array from each item written to the river, and returns a promise for that array. The items in the array will appear in the order that the river received them.
+Constructs an array of every item that enters the river, and returns a promise for that array. The items in the array will appear in the order that the river received them.
 
 ```js
 River.from(['a', 'b', 'c'])
