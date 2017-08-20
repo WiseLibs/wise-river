@@ -194,7 +194,7 @@ Returns a promise for the first item in the river to match the `predicate` funct
 
 The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also return a promise for `true` or `false`, instead.
 
-If the river ends but no items matched the `predicate`, the returned promise will be rejected with a `NoDataError`.
+If the river fulfills but no items matched the `predicate`, the returned promise will be rejected with a `NoDataError`.
 
 `NoDataError` is available at `River.NoDataError`.
 
