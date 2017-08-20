@@ -192,7 +192,7 @@ River.from(['a', 'b', 'c'])
 
 Returns a promise for the first item in the river to match the `predicate` function. When a match is found, the returned promise will be fulfilled with that item and the river will be cancelled.
 
-The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also returns a promise for `true` or `false`, instead.
+The `predicate` function will be invoked for each item in the river, and should return `true` if it's a match, or `false` otherwise. It can also return a promise for `true` or `false`, instead.
 
 If the river fulfills but no items matched the `predicate`, the promise will be rejected with a `NoDataError`.
 
