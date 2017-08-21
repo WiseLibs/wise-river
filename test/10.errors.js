@@ -35,16 +35,17 @@ const { expect } = require('chai');
 			const b = getOwnPropertyDescriptors(bObject);
 			const aStack = (a.stack.value || a.stack.get.call(aObject)).split('\n')[0];
 			const bStack = (b.stack.value || b.stack.get.call(bObject)).split('\n')[0];
+			expect(bStack.replace(name, 'Error')).to.equal(aStack);
+			expect(aStack).to.equal(String(aObject));
+			expect(bStack).to.equal(String(bObject));
 			a.stack.value = '';
 			b.stack.value = '';
 			if (name === 'Cancellation' && typeof a.stack.get === 'function') {
+				a.stack.writable = typeof a.stack.set === 'function';
 				delete a.stack.get;
 				delete a.stack.set;
 			}
 			expect(a).to.deep.equal(b);
-			expect(bStack.replace(name, 'Error')).to.equal(aStack);
-			expect(aStack).to.equal(String(aObject));
-			expect(bStack).to.equal(String(bObject));
 		});
 		if (name === 'Cancellation') it('should not have a full stack trace', function () {
 			expect(new CustomError('foobar').stack).to.equal(String(new CustomError('foobar')));
