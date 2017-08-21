@@ -148,7 +148,7 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should respect a given concurrency value', function () {
-		// TODO
+		
 	});
 	it('should not fulfill the river until processing is done', function () {
 		

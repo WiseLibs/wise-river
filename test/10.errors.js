@@ -37,6 +37,10 @@ const { expect } = require('chai');
 			const bStack = (b.stack.value || b.stack.get.call(bObject)).split('\n')[0];
 			a.stack.value = '';
 			b.stack.value = '';
+			if (name === 'Cancellation' && typeof a.stack.get === 'function') {
+				delete a.stack.get;
+				delete a.stack.set;
+			}
 			expect(a).to.deep.equal(b);
 			expect(bStack.replace(name, 'Error')).to.equal(aStack);
 			expect(aStack).to.equal(String(aObject));
