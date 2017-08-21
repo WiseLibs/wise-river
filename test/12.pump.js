@@ -148,9 +148,9 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should respect a given concurrency value', function () {
-		
+		// as either argument
 	});
-	it('should not fulfill the river until processing is done', function () {
+	it('should not fulfill the river until processing and racing is done', function () {
 		
 	});
 	it('should reject the river if the handler throws or returns a rejected promise', function () {
@@ -178,6 +178,9 @@ describe('.pump()', function () {
 		
 	});
 	it('should synchronously invoke cleanup functions in FILO order', function () {
+		
+	});
+	it('should immediately invoke cleanup functions if the river is already resolved', function () {
 		
 	});
 });
