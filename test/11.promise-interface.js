@@ -31,13 +31,15 @@ describe('Promise interface', function () {
 		expect(() => River.after(1)).to.throw(TypeError);
 	});
 	it('should always be fulfilled with undefined', function () {
-		return expect(new River((resolve, reject) => resolve(123)))
+		return expect(new River((resolve, _) => resolve(123)))
 			.to.become(undefined);
 	});
 	it('should be rejected like regular promises', function () {
 		const err = new Error('foobar');
-		return expect(new River((resolve, reject) => reject(err)))
-			.to.be.rejectedWith(err);
+		return Promise.all([
+			expect(new River((_, reject) => reject(err))).to.be.rejectedWith(err),
+			expect(new River((_, __) => { throw err; })).to.be.rejectedWith(err)
+		]);
 	});
 	it('should hang pending like regular promises', function (done) {
 		const fail = () => { done(new Error('This river should not have been resolved')); }
