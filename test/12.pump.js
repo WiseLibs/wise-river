@@ -59,7 +59,7 @@ describe('.pump()', function () {
 	it('should feed written items into the registered handler, in order', function () {
 		const river = new River(alphabetResolver);
 		let str = '';
-		expect(river.pump(item => str = str + item)).to.be.a('function');
+		expect(river.pump(item => str += item)).to.be.a('function');
 		return expect(river.then(() => str)).to.become('abcdef');
 	});
 	it('should emit a warning and return a noop function if called more than once', function () {
@@ -98,7 +98,7 @@ describe('.pump()', function () {
 	it('should not invoke the handler synchronously after registering it', function (done) {
 		const river = new River((_, __, write) => { write('a'); write('b'); write('c'); });
 		let str = '';
-		expect(river.pump(item => str = str + item)).to.be.a('function');
+		expect(river.pump(item => str += item)).to.be.a('function');
 		expect(str).to.equal('');
 		Promise.resolve().then(() => {
 			if (str === 'abc') done();
@@ -131,7 +131,7 @@ describe('.pump()', function () {
 				else resolve();
 			});
 			let str = '';
-			expect(river.pump(item => str = str + item)).to.be.a('function');
+			expect(river.pump(item => str += item)).to.be.a('function');
 			return river.then(() => str);
 		};
 		const direct = (arg) => (write) => write(Promise.resolve(arg));
@@ -148,7 +148,37 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should respect a given concurrency value', function () {
-		// as either argument
+		const fn = Symbol();
+		const concurrencyTest = (max, args) => {
+			const river = new River((resolve, _, write) => {
+				write('a'); write('b'); write('c'); write('d'); write('e'); write('f'); write('g'); resolve();
+			});
+			let processing = 0;
+			let reachedMax = false;
+			let str = '';
+			if (args.includes(fn)) {
+				args[args.indexOf(fn)] = (item) => {
+					processing += 1;
+					expect(processing).to.be.lte(max);
+					if (processing === max) reachedMax = true;
+					return new Promise(r => setTimeout(r, 2)).then(() => { str += item; processing -= 1; });
+				};
+			}
+			river.pump(...args);
+			return river.then(() => { expect(reachedMax).to.equal(max <= 7); }).then(() => str);
+		};
+		return Promise.all([
+			expect(concurrencyTest(8, [() => {}])).to.become(''),
+			expect(concurrencyTest(8, [fn])).to.become('abcdefg'),
+			expect(concurrencyTest(8, [0, fn])).to.become('abcdefg'),
+			expect(concurrencyTest(8, [fn, 0])).to.become('abcdefg'),
+			expect(concurrencyTest(5, [5, fn])).to.become('abcdefg'),
+			expect(concurrencyTest(5, [fn, 5])).to.become('abcdefg'),
+			expect(concurrencyTest(2, [fn, 2])).to.become('abcdefg'),
+			expect(concurrencyTest(2, [2, fn])).to.become('abcdefg'),
+			expect(concurrencyTest(1, [1, fn])).to.become('abcdefg'),
+			expect(concurrencyTest(1, [fn, 1])).to.become('abcdefg')
+		]);
 	});
 	it('should not fulfill the river until processing and racing is done', function () {
 		
