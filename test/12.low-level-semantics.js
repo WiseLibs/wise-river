@@ -11,7 +11,7 @@ const alphabetResolver = ((resolve, _, write) => {
 	write('b');
 });
 
-describe('.pump()', function () {
+describe('Low-level semantics (constructor and .pump())', function () {
 	it('should be a noop if the river is already resolved', function () {
 		const err = new Error('foobar');
 		const r1 = new River((r) => r());
