@@ -325,7 +325,7 @@ describe('.pump()', function () {
 	it('should support cleanup functions which are invoked regardless of fate', function () {
 		
 	});
-	it('should synchronously invoke cleanup functions in FILO order', function () {
+	it('should synchronously invoke cleanup functions in LIFO order', function () {
 		
 	});
 	it('should immediately invoke cleanup functions if river is already resolved', function () {
