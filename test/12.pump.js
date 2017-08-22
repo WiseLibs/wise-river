@@ -181,13 +181,58 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should not fulfill the river until processing and racing is done', function () {
-		
+		const river1 = new River((resolve, _, write) => {
+			write(new Promise(r => setTimeout(r, 20))); resolve();
+		});
+		const river2 = new River((resolve, _, write) => {
+			write(new Promise(r => setTimeout(r, 20))); resolve();
+		});
+		river1.pump(x => new Promise(r => setTimeout(r, 20)));
+		river2.pump(() => {});
+		let timer1 = false;
+		let timer2 = false;
+		let timer3 = false;
+		let timer4 = false;
+		setTimeout(() => timer1 = true, 10);
+		setTimeout(() => timer2 = true, 30);
+		setTimeout(() => timer3 = true, 39);
+		setTimeout(() => timer4 = true, 50);
+		return Promise.all([
+			river1.then(() => {
+				expect(timer1).to.equal(true);
+				expect(timer2).to.equal(true);
+				expect(timer3).to.equal(true);
+				expect(timer4).to.equal(false);
+			}),
+			river2.then(() => {
+				expect(timer1).to.equal(true);
+				expect(timer2).to.equal(false);
+			})
+		]);
 	});
 	it('should reject the river if the handler throws or returns a rejected promise', function () {
-		
+		const handle = (fn) => { const r = new River(alphabetResolver); r.pump(fn); return r; };
+		const err1 = new Error('foo');
+		const err2 = new Error('bar');
+		return Promise.all([
+			expect(handle(() => { throw err1 })).to.be.rejectedWith(err1),
+			expect(handle(() => Promise.reject(err2))).to.be.rejectedWith(err2)
+		]);
 	});
 	it('should not be able to write any more values after resolve() is called', function () {
-		// even if the river is still processing
+		const river = new River((resolve, _, write) => {
+			write(1);
+			write(new Promise(r => setTimeout(() => r(10), 20)));
+			resolve(new Promise(r => setTimeout(r, 50)).then(() => total += 5));
+			write(new Promise(r => setTimeout(() => r(100), 10)));
+			write(1000);
+		});
+		let total = 0;
+		river.pump(n => new Promise(r => setTimeout(() => { total += n; r(); }, 20)));
+		return Promise.all([
+			expect(river.then(() => total)).to.become(16),
+			expect(new Promise(r => setTimeout(r, 80)).then(() => total)).to.become(16)
+		]);
 	});
 	it('should ignore outside calls after resolve(), even if still processing', function () {
 		// ignore multiple calls to resolve(), even if passing a rejected promise
