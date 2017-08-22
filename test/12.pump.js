@@ -358,6 +358,19 @@ describe('.pump()', function () {
 		expect(str).to.equal('');
 	});
 	it('should immediately invoke cleanup functions if river is already resolved', function () {
-		
+		let str = '';
+		const cleanup = (x) => () => { str += x; return new Promise(r => setTimeout(r, 100)); }
+		new River((resolve, _, __, free) => {
+			free(cleanup('a'));
+			free(cleanup('b'));
+			free(() => {
+				free(cleanup('x'));
+				str += 'c';
+				free(cleanup('y'));
+			});
+			resolve();
+			free(cleanup('d'));
+		});
+		expect(str).to.equal('xcybad');
 	});
 });
