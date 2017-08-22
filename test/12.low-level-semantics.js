@@ -69,10 +69,11 @@ describe('Low-level semantics (constructor and .pump())', function () {
 		const err = new Error('foobar');
 		const pumped = (a, b, c, d) => { const r = new River((r) => setImmediate(r)); expect(r.pump(a, b)).to.be.a('function'); r.pump(c, d)(); return r; }
 		const cancelled = (fn) => { const r = new River(fn); expect(r.pump(() => {})).to.be.a('function'); r.pump(() => {})(); return r; }
+		const timeout = (ms, p) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new River.TimeoutError('The promise timed out')), ms))]);
 		return Promise.all([
 			expect(cancelled((r) => setImmediate(r))).to.become(undefined),
 			expect(cancelled((_, r) => setImmediate(r, err))).to.be.rejectedWith(err),
-			expect(cancelled(() => {}).timeout(50)).to.be.rejectedWith(River.TimeoutError),
+			expect(timeout(50, cancelled(() => {}))).to.be.rejectedWith(River.TimeoutError),
 			expect(pumped(undefined, undefined, 0, () => {})).to.be.rejectedWith(TypeError),
 			expect(pumped(() => {}, 0, undefined, undefined)).to.become(undefined),
 			expect(pumped(0, () => {}, 123, 123)).to.become(undefined),
