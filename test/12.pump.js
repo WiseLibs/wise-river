@@ -89,7 +89,7 @@ describe('.pump()', function () {
 		let str1 = '';
 		let str2 = '';
 		expect(river.pump(item => str1 = str1 + item)).to.be.a('function');
-		river.pump(item => str2 = str2 + item)(/* no-op cancellation */);
+		river.pump(item => str2 = str2 + item)(/* no-op cancellation attempt */);
 		return Promise.all([
 			expect(river.then(() => str1)).to.become('abcdef'),
 			expect(river.then(() => str2)).to.become('')
@@ -275,17 +275,54 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should supress unhandled rejected promises written after resolve()', function () {
-		
+		let unhandled = false;
+		const setUnhandled = () => unhandled = true;
+		process.on('unhandledRejection', setUnhandled);
+		const river = new River((r, _, w) => { r(new Promise(r => setTimeout(r, 10))); w(Promise.reject(new Error('foo'))); });
+		return river.then(() => new Promise(r => setTimeout(r, 10))).then(() => {
+			process.removeListener('unhandledRejection', setUnhandled);
+			expect(unhandled).to.equal(false);
+		}, (reason) => {
+			process.removeListener('unhandledRejection', setUnhandled);
+			throw reason;
+		});
 	});
 	it('should still be able to reject the river after calling resolve()', function () {
-		// by throwing in the handler, or returning a rejected promise
-		// by passing invalid arguments to pump()
-		// by cancellation
+		const err = new Error('foobar');
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const rejectionTest = (args, delayed, shouldCancel) => {
+			const river = new River((r, _, w) => { w(); delayed ? r(after(10)) : r(); });
+			const cancel = river.pump(...args);
+			if (shouldCancel) cancel();
+			return river;
+		};
+		return Promise.all([
+			expect(rejectionTest([() => { throw err; }], false, false)).to.be.rejectedWith(err),
+			expect(rejectionTest([() => { throw err; }], true, false)).to.be.rejectedWith(err),
+			expect(rejectionTest([() => Promise.reject(err)], false, false)).to.be.rejectedWith(err),
+			expect(rejectionTest([() => Promise.reject(err)], true, false)).to.be.rejectedWith(err),
+			expect(rejectionTest([() => {}], false, true)).to.be.rejectedWith(River.Cancellation),
+			expect(rejectionTest([() => {}], true, true)).to.be.rejectedWith(River.Cancellation)
+		]);
 	});
 	it('should not process racing values or queued values after being rejected', function () {
-		// test with promises racing and promises processing
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const river = new River((r, _, w) => { w('a'); w('b'); w(after(10, 'c')); setTimeout(() => w('d'), 20); r(); });
+		const err = new Error('foobar');
+		let correctValue = false;
+		let invoked = 0;
+		river.pump((item) => {
+			correctValue = item === 'a';
+			invoked += 1;
+			throw err;
+		});
+		return Promise.all([
+			expect(river).to.be.rejectedWith(err),
+			expect(after(30).then(() => correctValue)).to.become(true),
+			expect(after(30).then(() => invoked)).to.become(1)
+		]);
 	});
-	it('should support cleanup functions that are invoked regardless of fate', function () {
+	it('should support cleanup functions which are invoked regardless of fate', function () {
 		
 	});
 	it('should synchronously invoke cleanup functions in FILO order', function () {
