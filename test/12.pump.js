@@ -210,7 +210,7 @@ describe('.pump()', function () {
 			})
 		]);
 	});
-	it('should reject the river if the handler throws or returns a rejected promise', function () {
+	it('should reject the river if the handler throws or returns rejected', function () {
 		const handle = (fn) => { const r = new River(alphabetResolver); r.pump(fn); return r; };
 		const err1 = new Error('foo');
 		const err2 = new Error('bar');
@@ -220,26 +220,62 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should not be able to write any more values after resolve() is called', function () {
-		const river = new River((resolve, _, write) => {
-			write(1);
-			write(new Promise(r => setTimeout(() => r(10), 20)));
-			resolve(new Promise(r => setTimeout(r, 50)).then(() => total += 5));
-			write(new Promise(r => setTimeout(() => r(100), 10)));
-			write(1000);
-		});
-		let total = 0;
-		river.pump(n => new Promise(r => setTimeout(() => { total += n; r(); }, 20)));
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const cutoffTest = (process, a, b, c, wait) => {
+			const river = new River((r, _, w) => { w(a); r(b); w(c); });
+			let str = '';
+			river.pump(x => process ? after(process.process).then(() => str += x) : str += x);
+			return Promise.all([
+				expect(river.then(() => str)).to.become('a'),
+				expect(after(wait).then(() => str)).to.become('a')
+			]);
+		};
 		return Promise.all([
-			expect(river.then(() => total)).to.become(16),
-			expect(new Promise(r => setTimeout(r, 80)).then(() => total)).to.become(16)
+			cutoffTest(null, 'a', 'b', 'c', 10),
+			cutoffTest(null, after(10, 'a'), 'b', 'c', 20),
+			cutoffTest(null, 'a', after(10, 'b'), 'c', 20),
+			cutoffTest(null, 'a', 'b', after(10, 'c'), 20),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), 'c', 40),
+			cutoffTest(null, after(10, 'a'), 'b', after(2, 'c'), 20),
+			cutoffTest(null, 'a', after(20, 'b'), after(2, 'c'), 30),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), after(2, 'c'), 40),
+			cutoffTest({ process: 10 }, 'a', 'b', 'c', 20),
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 'c', 30),
+			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 'c', 30),
+			cutoffTest({ process: 10 }, 'a', 'b', after(10, 'c'), 30),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 'c', 50),
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', after(2, 'c'), 30),
+			cutoffTest({ process: 10 }, 'a', after(20, 'b'), after(2, 'c'), 40),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), after(2, 'c'), 50)
 		]);
 	});
 	it('should ignore outside calls after resolve(), even if still processing', function () {
-		// ignore multiple calls to resolve(), even if passing a rejected promise
-		// - ^ should this supress unhandled rejections passed to resolve()?
-		// ignore reject()
-		// ignore write()ing rejected promises
-		// - ^ and should supress unhandled rejections passed to write()
+		const err = new Error('foobar');
+		const rejected = Promise.reject(err);
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const cutoffTest = (process, a, b, wait) => {
+			const river = new River((rs, rj, w) => { w(a); rs(b); w(rejected); rs(rejected); rj(err); });
+			let str = '';
+			river.pump(x => process ? after(process.process).then(() => str += x) : str += x);
+			return Promise.all([
+				expect(river.then(() => str)).to.become('a'),
+				expect(after(wait).then(() => str)).to.become('a')
+			]);
+		};
+		rejected.catch(() => {});
+		return Promise.all([
+			cutoffTest(null, 'a', 'b', 10),
+			cutoffTest(null, after(10, 'a'), 'b', 20),
+			cutoffTest(null, 'a', after(10, 'b'), 20),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), 40),
+			cutoffTest({ process: 10 }, 'a', 'b', 20),
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 30),
+			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 30),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 50)
+		]);
+	});
+	it('should supress unhandled rejected promises written after resolve()', function () {
+		
 	});
 	it('should still be able to reject the river after calling resolve()', function () {
 		// by throwing in the handler, or returning a rejected promise
@@ -255,7 +291,7 @@ describe('.pump()', function () {
 	it('should synchronously invoke cleanup functions in FILO order', function () {
 		
 	});
-	it('should immediately invoke cleanup functions if the river is already resolved', function () {
+	it('should immediately invoke cleanup functions if river is already resolved', function () {
 		
 	});
 });
