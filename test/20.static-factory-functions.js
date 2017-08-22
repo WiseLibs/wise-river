@@ -155,15 +155,70 @@ describe('River.every()', function () {
 
 describe('River.combine()', function () {
 	it('should return a river with the combined data of the given rivers', function () {
-		
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const rivers = [
+			River.one('a'),
+			River.empty(),
+			River.from(['b', after(20, 'c'), 'd']),
+			River.one('e')
+		];
+		const river = River.combine(rivers);
+		let str = '';
+		river.pump(item => str += item);
+		return after(10).then(() => {
+			expect(str).to.equal('abde');
+			return Promise.race([river, after(2, 123)]);
+		}).then((value) => {
+			expect(value).to.equal(123);
+			expect(str).to.equal('abde');
+			return Promise.race([river, after(15, 123)]);
+		}).then((value) => {
+			expect(value).to.equal(undefined);
+			expect(str).to.equal('abdec');
+		});
 	});
 	it('should accept regular promises', function () {
-		
+		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
+		const river = River.combine(123, after(20, 456), [789, River.from(['a', 'b', 'c'])]);
+		let str = '';
+		river.pump(item => str += item);
+		return after(10).then(() => {
+			expect(str).to.equal('abc');
+			return Promise.race([river, after(2, 'qux')]);
+		}).then((value) => {
+			expect(value).to.equal('qux');
+			expect(str).to.equal('abc');
+			return Promise.race([river, after(15, 123)]);
+		}).then((value) => {
+			expect(value).to.equal(undefined);
+			expect(str).to.equal('abc');
+		});
 	});
 	it('should not affect any arguments if iteration throws', function () {
-		
+		const called = 0;
+		const err = new Error('foobar');
+		const promise = Promise.resolve();
+		promise.then = function (a, b) { called += 1; return Promise.prototype.then.call(this, a, b); };
+		const river = River.never();
+		const combined = River.combine([promise, river], { [Symbol.iterator]: () => ({ next() { throw err; } }) });
+		return expect(combined).to.be.rejectedWith(err).then(() => {
+			return new Promise(r => setTimeout(r, 5));
+		}).then(() => {
+			expect(called).to.equal(0);
+			const fail = () => { throw new Error('This river should not have been resolved'); }
+			return Promise.race([river.then(fail, fail), new Promise(r => setTimeout(r, 5))]);
+		});
 	});
 	it('should cancel all given rivers when itself is cancelled', function () {
-		
+		const rivers = [River.one('foo'), River.empty(), River.every(5), River.never()];
+		const river = River.combine(rivers);
+		river.pump(() => {})();
+		return Promise.all([
+			expect(river).to.be.rejectedWith(River.Cancellation),
+			expect(rivers[0]).to.be.rejectedWith(River.Cancellation),
+			expect(rivers[2]).to.be.rejectedWith(River.Cancellation),
+			expect(rivers[3]).to.be.rejectedWith(River.Cancellation),
+			expect(rivers[1]).to.become(undefined)
+		]);
 	});
 });
