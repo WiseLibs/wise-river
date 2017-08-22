@@ -195,7 +195,7 @@ describe('.pump()', function () {
 		let timer4 = false;
 		setTimeout(() => timer1 = true, 10);
 		setTimeout(() => timer2 = true, 30);
-		setTimeout(() => timer3 = true, 39);
+		setTimeout(() => timer3 = true, 35);
 		setTimeout(() => timer4 = true, 50);
 		return Promise.all([
 			river1.then(() => {
@@ -323,10 +323,39 @@ describe('.pump()', function () {
 		]);
 	});
 	it('should support cleanup functions which are invoked regardless of fate', function () {
-		
+		let str = '';
+		const err = new Error('foobar');
+		const cleanup = (x) => () => str += x;
+		const fulfilled = new River((r, _, __, f) => { f(cleanup('a')); setTimeout(r, 7); });
+		const rejected = new River((_, r, __, f) => { f(cleanup('b')); setTimeout(() => r(err), 15); });
+		expect(str).to.equal('');
+		return Promise.all([
+			expect(new Promise(r => setTimeout(() => r(str), 1))).to.become(''),
+			expect(fulfilled).to.become(undefined),
+			expect(rejected).to.be.rejectedWith(err),
+		]).then(() => { expect(str).to.equal('ab'); });
 	});
-	it('should synchronously invoke cleanup functions in LIFO order', function () {
-		
+	it('should synchronously invoke cleanup functions in LIFO order', function (done) {
+		let str = '';
+		const cleanup = (x) => () => { str += x; return new Promise(r => setTimeout(r, 100)); }
+		new River((resolve, _, __, free) => {
+			free(cleanup('a'));
+			free(cleanup('b'));
+			setTimeout(() => {
+				try {
+					expect(str).to.equal('');
+					free(cleanup('c'));
+					free(cleanup('d'));
+					expect(str).to.equal('');
+					resolve();
+					expect(str).to.equal('dcba');
+					done();
+				} catch (err) {
+					done(err);
+				}
+			}, 5);
+		});
+		expect(str).to.equal('');
 	});
 	it('should immediately invoke cleanup functions if river is already resolved', function () {
 		
