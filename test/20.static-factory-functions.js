@@ -165,9 +165,9 @@ describe('River.combine()', function () {
 		const river = River.combine(rivers);
 		let str = '';
 		river.pump(item => str += item);
-		return after(10).then(() => {
+		return after(8).then(() => {
 			expect(str).to.equal('abde');
-			return Promise.race([river, after(2, 123)]);
+			return Promise.race([river, after(1, 123)]);
 		}).then((value) => {
 			expect(value).to.equal(123);
 			expect(str).to.equal('abde');
