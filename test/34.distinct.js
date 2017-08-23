@@ -1,7 +1,6 @@
 'use strict';
 const { expect } = require('chai');
 const River = require('../.');
-const invalidArgs = require('../tools/invalid-args');
 
 describe('.distinct()', function () {
 	it('should return a rejected river if invalid arguments are given', function () {
