@@ -1,6 +1,7 @@
 'use strict';
 const { expect } = require('chai');
 const River = require('../.');
+const invalidArgs = require('../tools/invalid-args');
 
 const alphabetResolver = ((resolve, _, write) => {
 	setTimeout(() => { write('f'); resolve(); }, 5);
@@ -20,32 +21,9 @@ describe('Low-level semantics (constructor and .pump())', function () {
 		expect(r2.pump()).to.be.a('function');
 		return expect(Promise.all([r1, r2.catch(x => x)])).to.become([undefined, err]);
 	});
-	it('should reject the river if a function is not given', function () {
-		const pumped = (a, b) => { const r = new River(() => {}); expect(r.pump(a, b)).to.be.a('function'); return r; }
-		return Promise.all([
-			expect(pumped()).to.be.rejectedWith(TypeError),
-			expect(pumped(123)).to.be.rejectedWith(TypeError),
-			expect(pumped(undefined, 123)).to.be.rejectedWith(TypeError),
-			expect(pumped(123, 123)).to.be.rejectedWith(TypeError),
-			expect(pumped(123, {})).to.be.rejectedWith(TypeError)
-		]);
-	});
-	it('should reject the river if an invalid concurrency value is given', function () {
-		const pumped = (a, b) => { const r = new River(() => {});  expect(r.pump(a, b)).to.be.a('function'); return r; }
-		return Promise.all([
-			expect(pumped(-1, () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped(1.000001, () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped(0xffffffff + 1, () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped(Infinity, () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped(NaN, () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped('1foo', () => {})).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, -1)).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, 1.000001)).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, 0xffffffff + 1)).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, Infinity)).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, NaN)).to.be.rejectedWith(TypeError),
-			expect(pumped(() => {}, '1foo')).to.be.rejectedWith(TypeError)
-		]);
+	it('should reject the river if invalid arguments are given', function () {
+		const pumped = (args) => { const r = new River(() => {}); expect(r.pump(...args)).to.be.a('function'); return r; }
+		return Promise.all(invalidArgs().map(args => expect(pumped(args)).to.be.rejectedWith(TypeError)));
 	});
 	it('should return a function that will cancel the river', function () {
 		const err = new Error('foobar');
