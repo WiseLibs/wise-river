@@ -80,7 +80,7 @@ This method returns a function (`"cancel"`). If `cancel` is called before the ri
 
 If you try to use `pump()` on same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's cancellation.
 
-`Cancellations` don't have stack traces. `Cancellation` is available at `River.Cancellation`.
+`Cancellation` is available at `River.Cancellation`.
 
 ### .fork(*count = 2*) -> *array of rivers*
 

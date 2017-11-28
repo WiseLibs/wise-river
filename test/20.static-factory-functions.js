@@ -127,6 +127,7 @@ describe('River.every()', function () {
 		setTimeout(check(2), 50);
 		setTimeout(() => { check(3)(); cancel(); }, 70);
 		setTimeout(() => tooLate = true, 80);
+		river.catchLater();
 		return new Promise(r => setTimeout(r, 75)).then(() => {
 			expect(count).to.equal(3);
 			expect(successes).to.equal(4);

@@ -42,7 +42,7 @@ describe('.fork()', function () {
 		forks[3].pump(() => str += 'd');
 		forks[0].then(() => str += 'w');
 		forks[1].then(() => str += 'x');
-		forks[2].then(() => str += 'y');
+		forks[2].then(() => str += 'y', () => {});
 		forks[3].then(() => str += 'z');
 		return Promise.all([
 			new Promise(r => setTimeout(r, 10)),
@@ -84,10 +84,13 @@ describe('.fork()', function () {
 			expect(str).to.equal('abc');
 			cancel1();
 			cancel3();
+			forks[1].catchLater();
+			forks[3].catchLater();
 			return new Promise(r => setTimeout(r, 10));
 		}).then(() => {
 			expect(str).to.equal('abcb');
 			cancel2();
+			forks[2].catchLater();
 		}).then(() => {
 			expect(str).to.equal('abcbz');
 			return expect(source).to.be.rejectedWith(River.Cancellation);

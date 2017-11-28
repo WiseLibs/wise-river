@@ -40,15 +40,7 @@ const { expect } = require('chai');
 			expect(bStack).to.equal(String(bObject));
 			a.stack.value = '';
 			b.stack.value = '';
-			if (name === 'Cancellation' && typeof a.stack.get === 'function') {
-				a.stack.writable = typeof a.stack.set === 'function';
-				delete a.stack.get;
-				delete a.stack.set;
-			}
 			expect(a).to.deep.equal(b);
-		});
-		if (name === 'Cancellation') it('should not have a full stack trace', function () {
-			expect(new CustomError('foobar').stack).to.equal(String(new CustomError('foobar')));
 		});
 	});
 });
