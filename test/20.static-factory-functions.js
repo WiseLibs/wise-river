@@ -149,7 +149,7 @@ describe('River.every()', function () {
 		const cancel = river.pump((x) => { expect(x).to.equal(undefined); count += 1 });
 		return new Promise(r => setTimeout(r, 20)).then(() => {
 			cancel();
-			expect(count).to.be.within(10, 30);
+			expect(count).to.be.within(5, 30);
 		});
 	});
 });
