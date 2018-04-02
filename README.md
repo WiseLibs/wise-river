@@ -206,7 +206,7 @@ The given `value` can be a promise, in which case its value is awaited before th
 
 ### .first([*number*]) -> *promise*
 
-If used without any arguments, this method returns a promise for the first item in river. If the river never received any data, the promise will be rejected with a `NoDataError`.
+If used without any arguments, this method returns a promise for the first item in the river. If the river never received any data, the promise will be rejected with a `NoDataError`.
 
 If a `number` is provided, the returned promise will instead be fulfilled with an array of the first `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
 
