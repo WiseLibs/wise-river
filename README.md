@@ -264,6 +264,10 @@ Returns a new river that contains the combination of all the values of all the g
 
 You can pass an array of rivers or pass them as individual arguments (or a mix thereof).
 
+### *static* River.isRiver(*value*) -> *boolean*
+
+Returns whether the given value is a river. This is useful for differentiating between rivers and regular promises.
+
 ### Promise#stream() -> *river*
 
 After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise is fulfilled with.
