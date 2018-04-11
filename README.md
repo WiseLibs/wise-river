@@ -206,7 +206,7 @@ The given `value` can be a promise, in which case its value is awaited before th
 
 ### .first([*number*]) -> *promise*
 
-If used without any arguments, this method returns a promise for the first item in river. If the river never received any data, the promise will be rejected with a `NoDataError`.
+If used without any arguments, this method returns a promise for the first item in the river. If the river never received any data, the promise will be rejected with a `NoDataError`.
 
 If a `number` is provided, the returned promise will instead be fulfilled with an array of the first `number` of items in the river (or less, if the river gets fulfilled without receiving that many items).
 
@@ -263,6 +263,10 @@ Constructs a new river that will emit `undefined` upon every interval of `millis
 Returns a new river that contains the combination of all the values of all the given rivers. The returned river will not be fulfilled until all the given rivers have been fulfilled. If any of the given rivers are rejected, this river is rejected too.
 
 You can pass an array of rivers or pass them as individual arguments (or a mix thereof).
+
+### *static* River.isRiver(*value*) -> *boolean*
+
+Returns whether the given value is a river. This is useful for differentiating between rivers and regular promises.
 
 ### Promise#stream() -> *river*
 
