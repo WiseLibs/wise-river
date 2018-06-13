@@ -234,6 +234,10 @@ new River(infiniteSource)
   .drain();
 ```
 
+### .drop() -> *undefined*
+
+Shorthand for `river.pump(() => {})()`. This method will immediately cancel the river. If the river was previously consumed, this is a no-op; only the *real* consumer has authority over the river's cancellation.
+
 ### *static* River.reject(*reason*) -> *river*
 
 Returns a new river that is rejected with the given `reason`.
