@@ -51,6 +51,17 @@ Unlike many styles of streams, a river does not preserve sequence/order, allowin
 
 Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/JoshuaWise/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been been consumed.
 
+Rivers are also [async iterable objects](https://github.com/tc39/proposal-async-iteration), and can be used in `for await` loops.
+
+```js
+for await (const item of River.from([1, 2, 3])) {
+  console.log(item);
+}
+// => 1
+// => 2
+// => 3
+```
+
 # API
 
 ## new River(*handler*)
@@ -303,19 +314,6 @@ new River(source)
 ```
 
 Some methods don't have concurrency control ([`.reduce()`](#reducecallback-initialvalue---promise), [`.distinct()`](#distinctequalsfunction---river), [`.fork()`](#forkcount--2---array-of-rivers), etc.). But don't worry, these methods will maintain order automatically.
-
-## Async iterables
-
-All rivers are also [async iterable objects](https://github.com/tc39/proposal-async-iteration), and can be used in `for await` loops.
-
-```js
-for await (const item of River.from([1, 2, 3])) {
-  console.log(item);
-}
-// => 1
-// => 2
-// => 3
-```
 
 ## License
 
