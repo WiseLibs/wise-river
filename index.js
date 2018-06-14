@@ -1,4 +1,5 @@
 'use strict';
+require('./lib/riverify');
 const Promise = require('wise-promise');
 const WiseRiver = require('./lib/wise-river');
 
