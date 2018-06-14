@@ -148,6 +148,10 @@ Forwards the river's content to a new river until the given `promise` is fulfill
 
 If the `promise` is rejected before this river resolves, the returned river will be rejected with the same error. If the source river is fulfilled or rejected before the `promise` resolves, the returned river will also be fulfilled or rejected, respectively.
 
+### .decouple() -> *river*
+
+Returns a new river with the same content as the current one, except that if the river chain downstream is cancelled, the source river will not be cancelled.
+
 ### .consume([*concurrency*], *callback*) -> *promise*
 
 Similar to [`.forEach()`](#foreachconcurrency-callback---river), but the river's content is discarded instead of being piped to a new river. This method returns a promise which will be fulfilled or rejected as the river is fulfilled or rejected.
@@ -272,6 +276,14 @@ You can pass an array of rivers or pass them as individual arguments (or a mix t
 
 Returns whether the given value is a river. This is useful for differentiating between rivers and regular promises.
 
+### *static* River.riverify(*value*, [*options*]) -> *river*
+
+Converts a [Node.js style stream](https://nodejs.org/api/stream.html) or an [async iterable object](https://github.com/tc39/proposal-async-iteration) to a river.
+
+Currently, only one option is supported:
+  - `decouple`
+    * Setting this option to `true` means the resulting river will not destroy the source when the river becomes fulfilled or rejected/cancelled. This can be useful, for example, when riverifying one side of a duplex stream (since writing in the other direction may still be possible).
+
 ### Promise#stream() -> *river*
 
 After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise is fulfilled with.
@@ -291,6 +303,19 @@ new River(source)
 ```
 
 Some methods don't have concurrency control ([`.reduce()`](#reducecallback-initialvalue---promise), [`.distinct()`](#distinctequalsfunction---river), [`.fork()`](#forkcount--2---array-of-rivers), etc.). But don't worry, these methods will maintain order automatically.
+
+## Async iterables
+
+All rivers are also [async iterable objects](https://github.com/tc39/proposal-async-iteration), and can be used in `for await` loops.
+
+```js
+for await (const item of River.from([1, 2, 3])) {
+  console.log(item);
+}
+// => 1
+// => 2
+// => 3
+```
 
 ## License
 
