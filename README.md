@@ -76,7 +76,7 @@ Rivers will buffer their content until `pump()` (or a higher-level method of con
 
 Each river can only have a single consumer. If you try to use `pump()` on the same river twice, a warning will be emitted and the second consumer will never receive any data. In other words, the river will look like an empty river (except to the first consumer). This way, consumers either get "all or nothing" — it's impossible to receive a partial representation of the river's content.
 
-This method returns a function (`"cancel"`). If `cancel` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`. If you're piping the river's content to a *new* river, you should pass `cancel` to the fourth parameter of the River constructor (`free()`). This allows upstream consumers to cancel the river chain if they are no longer interested in it.
+This method returns a function (`"cancel"`). If `cancel` is called before the river is resolved, the river will be rejected with a `Cancellation` error, which is just a subclass of `Error`. If you're piping the river's content to a *new* river, you should pass `cancel` to the fourth parameter of the River constructor (`free()`). This allows consumers downstream to cancel the river chain if they are no longer interested in it.
 
 If you try to use `pump()` on same river twice, invocations after the first will return a no-op function; only the *real* consumer has authority over the river's cancellation.
 
