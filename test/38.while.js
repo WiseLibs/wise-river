@@ -21,8 +21,46 @@ describe('.while()', function () {
 		river.while(() => true).pump(() => {})();
 		return expect(river).to.be.rejectedWith(River.Cancellation);
 	});
-	it('should invoke the callback to determine a stopping point');
-	it('should respect a given concurrency value');
-	it('should reject the stream if the handler throws');
-	it('should reject the stream if the handler returns a rejected promise');
+	it('should invoke the callback to determine a stopping point', function () {
+		let str = '';
+		let invokedWith = '';
+		const river = River.from(['a', 'b', 'c', 'd']).while((x) => {
+			invokedWith += x;
+			return x === 'c' ? Promise.resolve(false) : Promise.resolve(true);
+		});
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(invokedWith).to.equal('abcd');
+			expect(str).to.equal('ab');
+		});
+	});
+	it('should respect a given concurrency value', function () {
+		let str = '';
+		let invokedWith = '';
+		const river = River.from(['a', 'b', 'c', 'd']).while(1, (x) => {
+			invokedWith += x;
+			return x === 'c' ? Promise.resolve(false) : Promise.resolve(true);
+		});
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(invokedWith).to.equal('abc');
+			expect(str).to.equal('ab');
+		});
+	});
+	it('should reject the stream if the handler throws', function () {
+		const err = new Error('foobar');
+		let str = '';
+		return expect(River.from(['a', 'b', Promise.resolve('c')]).while((x) => { str += x; throw err; }))
+			.to.be.rejectedWith(err)
+			.then(() => new Promise(r => setImmediate(r)))
+			.then(() => { expect(str).to.equal('a'); });
+	});
+	it('should reject the stream if the handler returns a rejected promise', function () {
+		const err = new Error('foobar');
+		let str = '';
+		return expect(River.from(['a', new Promise(r => setImmediate(() => r('b'))), 'c']).while((x) => { str += x; return Promise.reject(err); }))
+			.to.be.rejectedWith(err)
+			.then(() => new Promise(r => setImmediate(r)))
+			.then(() => { expect(str).to.equal('ac'); });
+	});
 });
