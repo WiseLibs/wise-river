@@ -4,7 +4,7 @@
 Rivers are a style of object streaming (observables) that provide:
 - Simple concurrency control
 - Automatic resource management
-- A familiar and intuitive API
+- A familiar, intuitive, and powerful API
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
 
 ## Installation
