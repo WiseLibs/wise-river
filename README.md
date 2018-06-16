@@ -250,9 +250,15 @@ new River(infiniteSource)
   .drain();
 ```
 
-### .drop() -> *undefined*
+### .drop() -> *this*
 
 Shorthand for `river.pump(() => {})()`. This method will immediately cancel the river. If the river was previously consumed, this is a no-op; only the *real* consumer has authority over the river's cancellation.
+
+Keep in mind, if the river does not have a rejection handler, the cancellation will still cause an `unhandledRejection`. Therefore it's common to use this method in conjunction with [`.catchLater()`](https://github.com/JoshuaWise/wise-promise#catchlater---this).
+
+```js
+river.catchLater().drop();
+```
 
 ### *static* River.reject(*reason*) -> *river*
 
