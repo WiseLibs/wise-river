@@ -284,10 +284,6 @@ Returns a new river that contains the combination of all the values of all the g
 
 You can pass an array of rivers or pass them as individual arguments (or a mix thereof).
 
-### *static* River.isRiver(*value*) -> *boolean*
-
-Returns whether the given value is a river. This is useful for differentiating between rivers and regular promises.
-
 ### *static* River.riverify(*value*, [*options*]) -> *river*
 
 Converts a [Node.js style stream](https://nodejs.org/api/stream.html) or an [async iterable object](https://github.com/tc39/proposal-async-iteration) to a river.
@@ -295,6 +291,10 @@ Converts a [Node.js style stream](https://nodejs.org/api/stream.html) or an [asy
 Currently, only one option is supported:
   - `decouple`
     * Setting this option to `true` means the resulting river will not destroy the source when the river becomes fulfilled or rejected/cancelled. This can be useful, for example, when riverifying one side of a duplex stream (since writing in the other direction may still be possible).
+
+### *static* River.isRiver(*value*) -> *boolean*
+
+Returns whether the given value is a river. This is useful for differentiating between rivers and regular promises.
 
 ### Promise#stream() -> *river*
 
