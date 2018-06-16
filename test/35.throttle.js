@@ -21,31 +21,35 @@ describe('.throttle()', function () {
 		return expect(river).to.be.rejectedWith(River.Cancellation);
 	});
 	it('should keep data that is received at an accepted pace', function () {
-		const promise = River.from([after(10, 'a'), after(50, 'b'), after(90, 'c')])
-			.throttle(25)
-			.all()
-			.then(arr => arr.join(''));
-		return expect(promise).to.become('abc');
+		let str = '';
+		const river = River.from([after(10, 'a'), after(50, 'b'), after(90, 'c')]).throttle(25);
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(str).to.equal('abc');
+		});
 	});
 	it('should defer the most recent piece of data', function () {
-		const promise = River.from([after(10, 'a'), after(20, 'b'), after(40, 'c')])
-			.throttle(25)
-			.all()
-			.then(arr => arr.join(''));
-		return expect(promise).to.become('abc');
+		let str = '';
+		const river = River.from([after(10, 'a'), after(20, 'b'), after(40, 'c')]).throttle(25);
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(str).to.equal('abc');
+		});
 	});
 	it('should discard data that is received too quickly', function () {
-		const promise = River.from([after(10, 'a'), after(20, 'b'), after(25, 'c')])
-			.throttle(25)
-			.all()
-			.then(arr => arr.join(''));
-		return expect(promise).to.become('ac');
+		let str = '';
+		const river = River.from([after(10, 'a'), after(20, 'b'), after(25, 'c')]).throttle(25);
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(str).to.equal('ac');
+		});
 	});
 	it('should cast any argument to a signed integer', function () {
-		const promise = River.from([after(10, 'a'), after(20, 'b'), after(25, 'c')])
-			.throttle(4294967321)
-			.all()
-			.then(arr => arr.join(''));
-		return expect(promise).to.become('ac');
+		let str = '';
+		const river = River.from([after(10, 'a'), after(20, 'b'), after(25, 'c')]).throttle(4294967321);
+		river.pump(x => str += x);
+		return expect(river).to.become(undefined).then(() => {
+			expect(str).to.equal('ac');
+		});
 	});
 });
