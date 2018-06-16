@@ -59,6 +59,10 @@ for await (const item of River.from([1, 2, 3])) {
 // => 3
 ```
 
+## Automatic resource management
+
+When a river is done being processed, it has the ability to destroy the underlying resources that the river relied on. If the river was spawned by reading from an existing river ("river chaining"), it can propagate cancellation upstream to the source. You don't need to remember to manually close resource handles—it all happens automatically. Even if you fork a river into multiple consumers, rivers are smart enough to keep the source alive until all consumers are finished.
+
 # API
 
 ## new River(*handler*)
