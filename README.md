@@ -2,13 +2,10 @@
 # wise-river [![Build Status](https://travis-ci.org/JoshuaWise/wise-river.svg?branch=master)](https://travis-ci.org/JoshuaWise/wise-river)
 
 Rivers are a style of object streaming (observables) that provide:
-- Simple and absolute concurrency control
+- Simple concurrency control
 - Automatic resource management
-- A subclass of the native Promise (*dependability*)
+- A familiar and intuitive API
 - Seamless integration with itself, promises, and the Node.js ecosystem (*see below*)
-
-#### "The River Manifesto"
-Streams are the plural form of promises, **therefore, they should share identity and composability with promises**.
 
 ## Installation
 
@@ -40,14 +37,14 @@ messages
 
 Most object streams in Node.js are highly opinionated, and they often don't compose well with promises (the sanctioned asynchronous primitive for JavaScript). Even the streams provided by the standard library exhibit many of these problems:
   1. They usually require subclassing or other boilerplate to accomplish simple tasks
-  2. They don't propagate errors consistently or reliably
+  2. They don't propagate errors, destroying the composability promised by `.pipe()`
   3. Their composability with the rest of the Node.js ecosystem is often weak and limited
 
-Object streams should *feel* like regular promises, but provide the ability to easily operate on promises as a collection (just like arrays and values).
+Object streams should *feel* like regular promises, but provide the ability to easily operate on promises as a collection (just like arrays of values).
 
 ## Unopinionated by default
 
-Unlike many styles of streams, a river does not preserve sequence/order, allowing for maximum concurrency by default (we don't make assumptions of what you're using it for!). However, rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Rivers](#ordered-rivers)). Because of this, rivers are strictly more powerful than traditional streams.
+Unlike many styles of streams, a river does not preserve sequence/order, allowing for maximum concurrency by default. However, rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Rivers](#ordered-rivers)). This flexibility makes accomplishing complicated tasks incredibly easy, making rivers feel very powerful when compared to other types of object streams or observables.
 
 Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/JoshuaWise/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been been consumed.
 
