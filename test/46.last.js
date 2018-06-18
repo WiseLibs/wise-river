@@ -19,8 +19,23 @@ describe('.last()', function () {
 		});
 	});
 	describe('with a count argument', function () {
-		xit('should return a rejected promise if an invalid count is given', function () {
-			// and the source should be cancelled
+		it('should return a rejected promise if an invalid count is given', function () {
+			const test = (count) => {
+				const source = River.from(['a', 'b', 'c']);
+				const promise = source.last(count);
+				return expect(promise).to.be.rejectedWith(TypeError)
+					.then(() => expect(source).to.be.rejectedWith(River.Cancellation));
+			};
+			return Promise.all([
+				test(null),
+				test(0),
+				test(-2),
+				test(2.000001),
+				test(NaN),
+				test(Infinity),
+				test('2'),
+				test('foobar'),
+			]);
 		});
 		it('should propagate rejections to the returned promise', function () {
 			const err = new Error('foobar');

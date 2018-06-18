@@ -10,6 +10,7 @@ describe('.fork()', function () {
 		expect(() => River.from(['a']).fork(2.000001)).to.throw(TypeError);
 		expect(() => River.from(['a']).fork(NaN)).to.throw(TypeError);
 		expect(() => River.from(['a']).fork(Infinity)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork('2')).to.throw(TypeError);
 		expect(() => River.from(['a']).fork('foobar')).to.throw(TypeError);
 	});
 	it('should return an array with the given number of branches', function () {
@@ -19,7 +20,6 @@ describe('.fork()', function () {
 			expect(value.length).to.equal(count);
 		};
 		countTest(2, river.fork());
-		countTest(2, river.fork('2'));
 		countTest(1, river.fork(1));
 		countTest(47, river.fork(47));
 	});
