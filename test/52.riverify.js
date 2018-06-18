@@ -1,5 +1,6 @@
 'use strict';
 const { expect } = require('chai');
+const { Writable } = require('stream');
 const River = require('../.');
 
 describe('River.riverify()', function () {
@@ -17,11 +18,14 @@ describe('River.riverify()', function () {
 				test(Symbol()),
 				test([]),
 				test(() => {}),
+				test(new Writable),
 			]);
 		});
 	});
 	describe('for stream objects', function () {
-		it('should be tested');
+		it('should be tested', function () {
+
+		});
 	});
 	describe('for async iterable objects', function () {
 		it('should be tested');
