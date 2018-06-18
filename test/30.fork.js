@@ -78,7 +78,7 @@ describe('.fork()', function () {
 		source.catch(() => str += 'z');
 		return expect(forks[0]).to.be.rejectedWith(River.Cancellation).then(() => {
 			expect(str).to.equal('');
-			return new Promise(r => setTimeout(r, 15));
+			return new Promise(r => setTimeout(r, 10));
 		}).then(() => {
 			expect(str).to.equal('abc');
 			cancel1();
