@@ -48,6 +48,7 @@ describe('.includes()', function () {
 	it('should accept a custom equals function', function () {
 		let str = '';
 		const equals = (x, y) => {
+			expect(x).to.equal('c');
 			if (y === 'b') y = 'c';
 			else if (y === 'c') y = 'b';
 			return x === y;

@@ -33,10 +33,20 @@ describe('.distinct()', function () {
 	});
 	it('should accept a custom equals function', function () {
 		let str = '';
-		const equals = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+		let checkedOrder = false;
+		const equals = (a, b) => {
+			if (str === 'a') {
+				checkedOrder = true;
+				expect(a).to.equal('a');
+				expect(b).to.deep.equal(['q']);
+			}
+			return String(a).toLowerCase() === String(b).toLowerCase();
+		};
 		const river = River.from(['a', ['q'], ['q'], 'b', 'b', 'c', 'c', 'c', Promise.resolve('x'), 'd', 'e', 'b', 'e', 'e', 'E', 'x']).distinct(equals);
 		river.pump(x => str += x);
-		return expect(river.then(() => str)).to.become('aqbcdebex');
+		return expect(river.then(() => str)).to.become('aqbcdebex').then(() => {
+			expect(checkedOrder).to.be.true;
+		});
 	});
 	it('should reject the stream if the equals function throws', function () {
 		const err = new Error('foobar');
