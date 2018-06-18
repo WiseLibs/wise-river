@@ -24,27 +24,31 @@ describe('.while()', function () {
 	it('should invoke the callback to determine a stopping point', function () {
 		let str = '';
 		let invokedWith = '';
-		const river = River.from(['a', 'b', 'c', 'd']).while((x) => {
+		const source = River.from(['a', 'b', 'c', 'd']);
+		const dest = source.while((x) => {
 			invokedWith += x;
 			return x === 'c' ? Promise.resolve(false) : Promise.resolve(true);
 		});
-		river.pump(x => str += x);
-		return expect(river).to.become(undefined).then(() => {
+		dest.pump(x => str += x);
+		return expect(dest).to.become(undefined).then(() => {
 			expect(invokedWith).to.equal('abcd');
 			expect(str).to.equal('ab');
+			return expect(source).to.be.rejectedWith(River.Cancellation);
 		});
 	});
 	it('should respect a given concurrency value', function () {
 		let str = '';
 		let invokedWith = '';
-		const river = River.from(['a', 'b', 'c', 'd']).while(1, (x) => {
+		const source = River.from(['a', 'b', 'c', 'd']);
+		const dest = source.while(1, (x) => {
 			invokedWith += x;
 			return x === 'c' ? Promise.resolve(false) : Promise.resolve(true);
 		});
-		river.pump(x => str += x);
-		return expect(river).to.become(undefined).then(() => {
+		dest.pump(x => str += x);
+		return expect(dest).to.become(undefined).then(() => {
 			expect(invokedWith).to.equal('abc');
 			expect(str).to.equal('ab');
+			return expect(source).to.be.rejectedWith(River.Cancellation);
 		});
 	});
 	it('should reject the stream if the handler throws', function () {
