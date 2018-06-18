@@ -4,14 +4,13 @@ const River = require('../.');
 
 describe('.fork()', function () {
 	it('should throw a TypeError if an invalid count is given', function () {
-		const river = River.empty();
-		expect(() => river.fork(null)).to.throw(TypeError);
-		expect(() => river.fork(0)).to.throw(TypeError);
-		expect(() => river.fork(-2)).to.throw(TypeError);
-		expect(() => river.fork(2.000001)).to.throw(TypeError);
-		expect(() => river.fork(NaN)).to.throw(TypeError);
-		expect(() => river.fork(Infinity)).to.throw(TypeError);
-		expect(() => river.fork('foobar')).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(null)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(0)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(-2)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(2.000001)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(NaN)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork(Infinity)).to.throw(TypeError);
+		expect(() => River.from(['a']).fork('foobar')).to.throw(TypeError);
 	});
 	it('should return an array with the given number of branches', function () {
 		const river = River.empty();

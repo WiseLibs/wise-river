@@ -12,8 +12,7 @@ describe('.includes()', function () {
 		const river = River.one(new Promise((_, r) => setTimeout(() => r(err), 10)));
 		return expect(river.includes(undefined)).to.be.rejectedWith(err);
 	});
-	it('should resolve to true when the given value to found', function () {
-		let str = '';
+	it('should be fulfilled with true when the given value is found', function () {
 		const source = River.from(['a', 'b', 'c', 'd']);
 		const promise = source.includes('c');
 		return expect(promise).to.become(true).then(() => {
@@ -21,15 +20,13 @@ describe('.includes()', function () {
 		});
 	});
 	it('should accept a promise of the value to search for', function () {
-		let str = '';
 		const source = River.from(['a', 'b', 'c', 'd']);
 		const promise = source.includes(after(20, 'c'));
 		return expect(promise).to.become(true).then(() => {
 			return expect(source).to.be.rejectedWith(River.Cancellation);
 		});
 	});
-	it('should resolve to false when the given value is not found', function () {
-		let str = '';
+	it('should be fulfilled to false when the given value is not found', function () {
 		const source = River.from(['a', 'b', 'c', 'd']);
 		const promise = source.includes('e');
 		return expect(promise).to.become(false).then(() => {
@@ -37,7 +34,6 @@ describe('.includes()', function () {
 		});
 	});
 	it('should reject the returned promise when the given promise is rejected', function () {
-		let str = '';
 		const err = new Error('foobar');
 		const source = River.from(['a', 'b', 'c', 'd']);
 		const promise = source.includes(new Promise((_, r) => setTimeout(() => r(err), 20)));
@@ -46,7 +42,6 @@ describe('.includes()', function () {
 		});
 	});
 	it('should accept a custom equals function', function () {
-		let str = '';
 		const equals = (x, y) => {
 			expect(x).to.equal('c');
 			if (y === 'b') y = 'c';
