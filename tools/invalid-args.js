@@ -32,3 +32,5 @@ module.exports = () => [
 	[123, 0],
 	[undefined, undefined]
 ];
+
+module.exports.callbackOnly = () => module.exports().filter(([x]) => typeof x !== 'function');

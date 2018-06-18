@@ -46,18 +46,16 @@ describe('.consume()', function () {
 		let invokedWith = '';
 		let pending = 0;
 		const promise = River.from(['a', 'b', 'c']).consume((x) => {
+			expect(pending).to.equal(0);
 			invokedWith += x;
 			if (x === 'a') {
-				expect(pending).to.equal(0);
 				return x;
 			}
 			if (x === 'b') {
-				expect(pending).to.equal(0);
 				pending += 1;
 				return Promise.resolve('foo').then(() => { pending -= 1; });
 			}
 			if (x === 'c') {
-				expect(pending).to.equal(0);
 				return x;
 			}
 			expect(false).to.be.true;
