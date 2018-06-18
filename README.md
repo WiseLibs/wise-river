@@ -216,9 +216,7 @@ If the river fulfills but no items matched the `predicate`, the returned promise
 
 ### .includes(*value*, [*equalsFunction*]) -> *promise*
 
-Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise will be fulfilled with `true` and the river will be cancelled. Otherwise, the returned promise will be fulfilled with `false`.
-
-The given `value` can be a promise, in which case its value is awaited before the river is searched.
+Returns a promise for a boolean that indicates whether or not the given value is found in the stream. If found, the returned promise will be fulfilled with `true` and the river will be cancelled. Otherwise, the returned promise will be fulfilled with `false`. The given `value` can be a promise, in which case its value is awaited before the river is searched.
 
 By default the `===` operator is used for checking equality, but you can optionally pass in a custom `equalsFunction` to be used instead.
 
