@@ -1,6 +1,6 @@
 {
   "name": "wise-river",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Object streaming the way it should be",
   "main": "lib/index.js",
   "scripts": {
