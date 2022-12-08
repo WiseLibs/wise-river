@@ -46,7 +46,7 @@ Object streams should *feel* like regular promises, but provide the ability to e
 
 Unlike many styles of streams, a river does not preserve sequence/order, allowing for maximum concurrency by default. However, rivers give you total concurrency control, and therefore they can be made to process items in sequence if desired (see [Ordered Rivers](#ordered-rivers)). This flexibility makes accomplishing complicated tasks incredibly easy, making rivers feel very powerful when compared to other types of streams or observables.
 
-Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/JoshuaWise/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been consumed.
+Rivers inherit from the native `Promise` ([`WisePromise`](https://github.com/WiseLibs/wise-promise)). If an error occurs in a river, the river will be rejected, along with all rivers that originate from it. If no error occurs, the river will be fulfilled with `undefined` when all of its items have been consumed.
 
 Rivers are also [async iterable objects](https://github.com/tc39/proposal-async-iteration), and can be used in `for await` loops.
 
@@ -256,7 +256,7 @@ new River(infiniteSource)
 
 Shorthand for `river.pump(() => {})()`. This method will immediately cancel the river. If the river was previously consumed, this is a no-op; only the *real* consumer has authority over the river's cancellation.
 
-Keep in mind, if the river does not have a rejection handler, the cancellation will still cause an `unhandledRejection`. Therefore it's common to use this method in conjunction with [`.catchLater()`](https://github.com/JoshuaWise/wise-promise#catchlater---this).
+Keep in mind, if the river does not have a rejection handler, the cancellation will still cause an `unhandledRejection`. Therefore it's common to use this method in conjunction with [`.catchLater()`](https://github.com/WiseLibs/wise-promise#catchlater---this).
 
 ```js
 river.catchLater().drop();
@@ -306,7 +306,7 @@ Returns whether the given value is a river. This is useful for differentiating b
 
 ### Promise#stream() -> *river*
 
-After loading this package, [`WisePromise`](https://github.com/JoshuaWise/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise is fulfilled with.
+After loading this package, [`WisePromise`](https://github.com/WiseLibs/wise-promise) will be augmented with the `.stream()` method, which returns a new river containing the eventual contents of the `iterable` object that the promise is fulfilled with.
 
 If the promise is fulfilled with something other than an `iterable` object, the river will be rejected with a `TypeError`.
 
@@ -326,4 +326,4 @@ Some methods don't have concurrency control ([`.reduce()`](#reducecallback-initi
 
 ## License
 
-[MIT](https://github.com/JoshuaWise/wise-river/blob/master/LICENSE)
+[MIT](https://github.com/WiseLibs/wise-river/blob/master/LICENSE)
