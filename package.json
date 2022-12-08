@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoshuaWise/wise-river.git"
+    "url": "git+https://github.com/WiseLibs/wise-river.git"
   },
   "keywords": [
     "observables",
@@ -21,9 +21,9 @@
   "author": "Joshua Wise <joshuathomaswise@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoshuaWise/wise-river/issues"
+    "url": "https://github.com/WiseLibs/wise-river/issues"
   },
-  "homepage": "https://github.com/JoshuaWise/wise-river#readme",
+  "homepage": "https://github.com/WiseLibs/wise-river#readme",
   "dependencies": {
     "wise-promise": ">=1.1.0"
   },
