@@ -13,7 +13,7 @@ describe('.decouple()', function () {
 		return expect(river.decouple()).to.be.rejectedWith(err);
 	});
 	it('should not propagate cancellations back to the source river', function () {
-		const source = River.from([after(10), after(30), after(50)]);
+		const source = River.from([after(20), after(60), after(100)]);
 		const dest = source.decouple();
 		dest.pump(() => {})();
 		const startTime = Date.now();
@@ -21,7 +21,7 @@ describe('.decouple()', function () {
 			expect(source).to.become(undefined),
 			expect(dest).to.be.rejectedWith(River.Cancellation),
 		]).then(() => {
-			expect(Date.now() - startTime).to.be.within(40, 60);
+			expect(Date.now() - startTime).to.be.within(80, 120);
 		});
 	});
 	it('should return a river with the same contents as the source', function () {

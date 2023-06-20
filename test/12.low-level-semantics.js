@@ -4,7 +4,7 @@ const River = require('../.');
 const invalidArgs = require('../tools/invalid-args');
 
 const alphabetResolver = ((resolve, _, write) => {
-	setTimeout(() => { write('f'); resolve(); }, 5);
+	setTimeout(() => { write('f'); resolve(); }, 20);
 	setImmediate(() => write('e'));
 	Promise.resolve().then(() => write('d'));
 	process.nextTick(() => write('c'));
@@ -165,21 +165,21 @@ describe('Low-level semantics (constructor and .pump())', function () {
 	});
 	it('should not fulfill the river until processing and racing is done', function () {
 		const river1 = new River((resolve, _, write) => {
-			write(new Promise(r => setTimeout(r, 20))); resolve();
+			write(new Promise(r => setTimeout(r, 40))); resolve();
 		});
 		const river2 = new River((resolve, _, write) => {
-			write(new Promise(r => setTimeout(r, 20))); resolve();
+			write(new Promise(r => setTimeout(r, 40))); resolve();
 		});
-		river1.pump(x => new Promise(r => setTimeout(r, 20)));
+		river1.pump(x => new Promise(r => setTimeout(r, 40)));
 		river2.pump(() => {});
 		let timer1 = false;
 		let timer2 = false;
 		let timer3 = false;
 		let timer4 = false;
-		setTimeout(() => timer1 = true, 10);
-		setTimeout(() => timer2 = true, 30);
-		setTimeout(() => timer3 = true, 35);
-		setTimeout(() => timer4 = true, 50);
+		setTimeout(() => timer1 = true, 20);
+		setTimeout(() => timer2 = true, 60);
+		setTimeout(() => timer3 = true, 75);
+		setTimeout(() => timer4 = true, 100);
 		return Promise.all([
 			river1.then(() => {
 				expect(timer1).to.equal(true);
@@ -214,22 +214,22 @@ describe('Low-level semantics (constructor and .pump())', function () {
 			]);
 		};
 		return Promise.all([
-			cutoffTest(null, 'a', 'b', 'c', 10),
-			cutoffTest(null, after(10, 'a'), 'b', 'c', 20),
-			cutoffTest(null, 'a', after(10, 'b'), 'c', 20),
-			cutoffTest(null, 'a', 'b', after(10, 'c'), 20),
-			cutoffTest(null, after(10, 'a'), after(20, 'b'), 'c', 40),
-			cutoffTest(null, after(10, 'a'), 'b', after(2, 'c'), 20),
-			cutoffTest(null, 'a', after(20, 'b'), after(2, 'c'), 30),
-			cutoffTest(null, after(10, 'a'), after(20, 'b'), after(2, 'c'), 40),
-			cutoffTest({ process: 10 }, 'a', 'b', 'c', 20),
-			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 'c', 30),
-			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 'c', 30),
-			cutoffTest({ process: 10 }, 'a', 'b', after(10, 'c'), 30),
-			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 'c', 50),
-			cutoffTest({ process: 10 }, after(10, 'a'), 'b', after(2, 'c'), 30),
-			cutoffTest({ process: 10 }, 'a', after(20, 'b'), after(2, 'c'), 40),
-			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), after(2, 'c'), 50)
+			cutoffTest(null, 'a', 'b', 'c', 20),
+			cutoffTest(null, after(10, 'a'), 'b', 'c', 40),
+			cutoffTest(null, 'a', after(10, 'b'), 'c', 40),
+			cutoffTest(null, 'a', 'b', after(10, 'c'), 40),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), 'c', 80),
+			cutoffTest(null, after(10, 'a'), 'b', after(2, 'c'), 40),
+			cutoffTest(null, 'a', after(20, 'b'), after(2, 'c'), 60),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), after(2, 'c'), 80),
+			cutoffTest({ process: 10 }, 'a', 'b', 'c', 40),
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 'c', 60),
+			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 'c', 60),
+			cutoffTest({ process: 10 }, 'a', 'b', after(10, 'c'), 60),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 'c', 100),
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', after(2, 'c'), 60),
+			cutoffTest({ process: 10 }, 'a', after(20, 'b'), after(2, 'c'), 80),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), after(2, 'c'), 100)
 		]);
 	});
 	it('should ignore outside calls after resolve(), even if still processing', function () {
@@ -247,14 +247,14 @@ describe('Low-level semantics (constructor and .pump())', function () {
 		};
 		rejected.catch(() => {});
 		return Promise.all([
-			cutoffTest(null, 'a', 'b', 10),
-			cutoffTest(null, after(10, 'a'), 'b', 20),
-			cutoffTest(null, 'a', after(10, 'b'), 20),
-			cutoffTest(null, after(10, 'a'), after(20, 'b'), 40),
+			cutoffTest(null, 'a', 'b', 20),
+			cutoffTest(null, after(10, 'a'), 'b', 40),
+			cutoffTest(null, 'a', after(10, 'b'), 40),
+			cutoffTest(null, after(10, 'a'), after(20, 'b'), 80),
 			cutoffTest({ process: 10 }, 'a', 'b', 20),
-			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 30),
-			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 30),
-			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 50)
+			cutoffTest({ process: 10 }, after(10, 'a'), 'b', 60),
+			cutoffTest({ process: 10 }, 'a', after(10, 'b'), 60),
+			cutoffTest({ process: 10 }, after(10, 'a'), after(20, 'b'), 100)
 		]);
 	});
 	it('should supress unhandled rejected promises written after resolve()', function () {

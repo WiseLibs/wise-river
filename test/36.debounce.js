@@ -30,7 +30,7 @@ describe('.debounce()', function () {
 	});
 	it('should discard data that is received too quickly', function () {
 		let str = '';
-		const river = River.from([after(10, 'a'), after(20, 'b'), after(55, 'c')]).debounce(25);
+		const river = River.from([after(20, 'a'), after(40, 'b'), after(110, 'c')]).debounce(50);
 		river.pump(x => str += x);
 		return expect(river).to.become(undefined).then(() => {
 			expect(str).to.equal('bc');
@@ -38,7 +38,7 @@ describe('.debounce()', function () {
 	});
 	it('should cast any argument to a signed integer', function () {
 		let str = '';
-		const river = River.from([after(10, 'a'), after(20, 'b'), after(55, 'c')]).debounce(4294967321);
+		const river = River.from([after(20, 'a'), after(40, 'b'), after(110, 'c')]).debounce(4294967346);
 		river.pump(x => str += x);
 		return expect(river).to.become(undefined).then(() => {
 			expect(str).to.equal('bc');

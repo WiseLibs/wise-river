@@ -18,34 +18,34 @@ describe('.timeoutBetweenEach()', function () {
 		return expect(river).to.be.rejectedWith(River.Cancellation);
 	});
 	it('should not timeout if data is regularly received', function () {
-		const promise = River.from([after(10, 'a'), after(30, 'b'), after(50, 'c')])
-			.timeoutBetweenEach(30)
+		const promise = River.from([after(10, 'a'), after(50, 'b'), after(90, 'c')])
+			.timeoutBetweenEach(60)
 			.all()
 			.then(arr => arr.join(''));
 		return expect(promise).to.become('abc');
 	});
 	it('should timeout if data is not received soon enough', function () {
-		const promise = River.from([after(10, 'a'), after(30, 'b'), after(70, 'c')])
-			.timeoutBetweenEach(30)
+		const promise = River.from([after(10, 'a'), after(50, 'b'), after(200, 'c')])
+			.timeoutBetweenEach(60)
 			.all();
 		return expect(promise).to.be.rejectedWith(River.TimeoutError);
 	});
 	it('should accept a string reason', function () {
-		const promise = River.from([after(10, 'a'), after(30, 'b'), after(70, 'c')])
-			.timeoutBetweenEach(30, 'foobar')
+		const promise = River.from([after(10, 'a'), after(50, 'b'), after(200, 'c')])
+			.timeoutBetweenEach(60, 'foobar')
 			.all();
 		return expect(promise).to.be.rejectedWith(/^foobar$/);
 	});
 	it('should accept an Error reason', function () {
 		const err = new TypeError('foobar');
-		const promise = River.from([after(10, 'a'), after(30, 'b'), after(70, 'c')])
-			.timeoutBetweenEach(30, err)
+		const promise = River.from([after(10, 'a'), after(50, 'b'), after(200, 'c')])
+			.timeoutBetweenEach(60, err)
 			.all();
 		return expect(promise).to.be.rejectedWith(err);
 	});
 	it('should start the timer right away', function () {
-		const promise = River.from([after(40, 'a'), after(50, 'b'), after(60, 'c')])
-			.timeoutBetweenEach(30)
+		const promise = River.from([after(80, 'a'), after(90, 'b'), after(100, 'c')])
+			.timeoutBetweenEach(60)
 			.all();
 		return expect(promise).to.be.rejectedWith(River.TimeoutError);
 	});

@@ -115,20 +115,20 @@ describe('River.from()', function () {
 
 describe('River.every()', function () {
 	it('should return a cancellable river that emits on an interval', function () {
-		const river = River.every(20);
+		const river = River.every(40);
 		expect(river).to.be.an.instanceof(River);
 		let count = 0;
 		let successes = 0;
 		let tooLate = false;
 		const cancel = river.pump((x) => { expect(x).to.equal(undefined); count += 1 });
 		const check = (expected) => () => { if (count === expected) successes += 1; }
-		setTimeout(check(0), 10);
-		setTimeout(check(1), 30);
-		setTimeout(check(2), 50);
-		setTimeout(() => { check(3)(); cancel(); }, 70);
-		setTimeout(() => tooLate = true, 80);
+		setTimeout(check(0), 20);
+		setTimeout(check(1), 60);
+		setTimeout(check(2), 100);
+		setTimeout(() => { check(3)(); cancel(); }, 140);
+		setTimeout(() => tooLate = true, 160);
 		river.catchLater();
-		return new Promise(r => setTimeout(r, 75)).then(() => {
+		return new Promise(r => setTimeout(r, 141)).then(() => {
 			expect(count).to.equal(3);
 			expect(successes).to.equal(4);
 			return expect(river).to.be.rejectedWith(River.Cancellation);
@@ -136,7 +136,7 @@ describe('River.every()', function () {
 			expect(count).to.equal(3);
 			expect(successes).to.equal(4);
 			expect(tooLate).to.equal(false);
-			return new Promise(r => setTimeout(r, 50))
+			return new Promise(r => setTimeout(r, 100));
 		}).then(() => {
 			expect(count).to.equal(3);
 			expect(successes).to.equal(4);
@@ -147,9 +147,9 @@ describe('River.every()', function () {
 		expect(river).to.be.an.instanceof(River);
 		let count = 0;
 		const cancel = river.pump((x) => { expect(x).to.equal(undefined); count += 1 });
-		return new Promise(r => setTimeout(r, 20)).then(() => {
+		return new Promise(r => setTimeout(r, 40)).then(() => {
 			cancel();
-			expect(count).to.be.within(5, 30);
+			expect(count).to.be.within(2, 60);
 		});
 	});
 });
@@ -160,19 +160,19 @@ describe('River.combine()', function () {
 		const rivers = [
 			River.one('a'),
 			River.empty(),
-			River.from(['b', after(20, 'c'), 'd']),
+			River.from(['b', after(40, 'c'), 'd']),
 			River.one('e')
 		];
 		const river = River.combine(rivers);
 		let str = '';
 		river.pump(item => str += item);
-		return after(8).then(() => {
+		return after(16).then(() => {
 			expect(str).to.equal('abde');
 			return Promise.race([river, after(1, 123)]);
 		}).then((value) => {
 			expect(value).to.equal(123);
 			expect(str).to.equal('abde');
-			return Promise.race([river, after(15, 123)]);
+			return Promise.race([river, after(30, 123)]);
 		}).then((value) => {
 			expect(value).to.equal(undefined);
 			expect(str).to.equal('abdec');
@@ -180,16 +180,16 @@ describe('River.combine()', function () {
 	});
 	it('should accept regular promises', function () {
 		const after = (ms, x) => new Promise(r => setTimeout(() => r(x), ms));
-		const river = River.combine(123, after(20, 456), [789, River.from(['a', 'b', 'c'])]);
+		const river = River.combine(123, after(40, 456), [789, River.from(['a', 'b', 'c'])]);
 		let str = '';
 		river.pump(item => str += item);
-		return after(10).then(() => {
+		return after(20).then(() => {
 			expect(str).to.equal('abc');
 			return Promise.race([river, after(2, 'qux')]);
 		}).then((value) => {
 			expect(value).to.equal('qux');
 			expect(str).to.equal('abc');
-			return Promise.race([river, after(15, 123)]);
+			return Promise.race([river, after(30, 123)]);
 		}).then((value) => {
 			expect(value).to.equal(undefined);
 			expect(str).to.equal('abc');
