@@ -1,5 +1,5 @@
 <a href="https://promisesaplus.com/"><img src="https://promisesaplus.com/assets/logo-small.png" align="right" /></a>
-# wise-river [![Build Status](https://travis-ci.org/JoshuaWise/wise-river.svg?branch=master)](https://travis-ci.org/JoshuaWise/wise-river)
+# wise-river
 
 Rivers are a style of object streaming (observables) that provide:
 - Simple concurrency control
