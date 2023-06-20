@@ -4,7 +4,7 @@
   "description": "Object streaming the way it should be",
   "main": "lib/index.js",
   "scripts": {
-    "test": "$(npm bin)/mocha --no-warnings --bail --timeout 1000 --slow 99999"
+    "test": "mocha --no-warnings --bail --timeout 1000 --slow 99999"
   },
   "repository": {
     "type": "git",

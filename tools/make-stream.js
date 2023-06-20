@@ -6,7 +6,7 @@ const dead = Symbol();
 
 class Stream extends Readable {
 	constructor(iterable) {
-		super({ objectMode: true, highWaterMark: 2 });
+		super({ objectMode: true, highWaterMark: 2, autoDestroy: false });
 		this[items] = Array.from(iterable);
 		this[finished] = false;
 		this[dead] = false;
