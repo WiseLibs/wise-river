@@ -1,5 +1,5 @@
 <a href="https://promisesaplus.com/"><img src="https://promisesaplus.com/assets/logo-small.png" align="right" /></a>
-# wise-river
+# wise-river [![test](https://github.com/WiseLibs/wise-river/actions/workflows/test.yml/badge.svg)](https://github.com/WiseLibs/wise-river/actions/workflows/test.yml)
 
 Rivers are a style of object streaming (observables) that provide:
 - Simple concurrency control
